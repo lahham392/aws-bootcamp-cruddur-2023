@@ -169,6 +169,39 @@ In the left hand select users &rarr; click ‘Add user’ &rarr; Select username
   <img src="https://user-images.githubusercontent.com/82225825/219868034-e318354b-4b9b-4fd7-aaca-0088c353b22c.png" alt="Sublime's custom image"/>
 </p>
 
+## Setup Gitpod
+It is an online cloud development environment CDE, we will use it to write a code as we integrate cloud services into our web application, 
+First of all login to Gitpod using your GitHub account (you will see all your repositories), Select the needed repository and start a new project.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219868182-6e4eaf7b-1d0b-4569-8687-48668089e117.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219868207-684aea02-6d65-49d0-8080-1d71cda75669.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
