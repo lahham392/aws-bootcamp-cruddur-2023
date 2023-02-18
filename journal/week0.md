@@ -106,6 +106,74 @@ Go to your Root Account &rarr; Search for AWS Budget Service &rarr; Click “cre
   <img src="https://user-images.githubusercontent.com/82225825/219866648-3599fd6d-99ad-4616-8780-578c488e3125.png" alt="Sublime's custom image"/>
 </p>
 
+<br/>
+<br/>
+
+### Usage Budget
+* We can also make a usage budget that will depends on hours…
+Go to your Root Account &rarr; Search for AWS Budget Service &rarr; Click “create budget” &rarr; we can select between template, or customize (we will select this time customize) &rarr; Select the template of your budget (we select usage budget) &rarr; Select the email we will send the alert to &rarr; finally click “create budget”
+
+### Creating Thresholds
+* To make your own threshold &rarr; click on your budget &rarr; go to ‘Edit’ &rarr; go next to step 2 &rarr; Select the threshold value &rarr; Save.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867581-38cf1c38-5007-41a4-843f-769af68ac406.png" alt="Sublime's custom image"/>
+</p>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867623-e306ce6e-ccf9-4638-b492-6cea26842046.png" alt="Sublime's custom image"/>
+</p>
+
+### Activating MFA
+Already done.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867744-b477fdca-e690-467b-bdf2-cb14774b8700.png" alt="Sublime's custom image"/>
+</p>
+
+
+### Delete Root User Access Keys
+Already done.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867773-e11410ca-7620-4292-a933-324c020300e2.png" alt="Sublime's custom image"/>
+</p>
+
+### Creating a new user to use it for deployment
+In the left hand select users &rarr; click ‘Add user’ &rarr; Select username &rarr; enable user access console &rarr; customize your setting for password &rarr; create an admin group with “Administrator Access” &rarr; click ‘create user’.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867897-005cb212-cce6-4af0-8faa-dd64f4adfdc0.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867915-2ac22bbb-7b22-49c2-8790-cd13a6e0a75b.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867928-36d537fe-de95-4e04-b2df-64064cead244.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867955-1210c957-de86-4f20-b468-0caa5f473867.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219867989-931748ab-c5a1-4bc7-8ab8-3f351fbcb0dc.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219868009-baa71394-4d64-4e11-92a1-1712afe6c111.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219868018-dd13c823-1585-4754-a9f5-b9684defc7be.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219868034-e318354b-4b9b-4fd7-aaca-0088c353b22c.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
 
 
 
