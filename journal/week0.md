@@ -75,6 +75,37 @@ C4 models (also known as Context, Containers, Components, and Code) is a softwar
   <img src="https://user-images.githubusercontent.com/82225825/219866364-77923738-5d47-4cdb-8e88-22412d2a7a0b.png" alt="Sublime's custom image"/>
 </p>
 
+<br/>
+<br/>
+
+## Creating AWS Account
+Already DONE "Easy"
+
+<br/>
+<br/>
+
+## Creating Budget for AWS
+Go to your Root Account &rarr; Search for AWS Budget Service &rarr; Click “create budget” &rarr; we can select between template, or customize (we will select zero spend budget) &rarr; select the template (zero spend) &rarr; Select the name of your budget (we select My Zero-Spend Budget) &rarr; Select the email we will send the alert to &rarr; finally click “create budget”
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219866530-7b4370b9-a4b1-4bb9-b187-266efcd08ee4.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219866598-500df430-5d57-4b79-8a1d-e46a81a1813c.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219866604-0d62d451-8a99-4bb7-8795-b845280b4dfc.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219866630-ccd49bf5-8f37-438e-977c-2159e7f83189.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219866648-3599fd6d-99ad-4616-8780-578c488e3125.png" alt="Sublime's custom image"/>
+</p>
+
 
 
 
