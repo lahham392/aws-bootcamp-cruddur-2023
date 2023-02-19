@@ -512,35 +512,41 @@ aws cloudwatch put-metric-alarm –cli-input-json: file://aws/json/alarm-config.
 
 ## HOMEWORK
 
-*1. Destroy your root account credentials, Set MFA, IAM role*
+**1. Destroy your root account credentials, Set MFA, IAM role**
 already done as shown above.
 
-*2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue*
+**2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue**
 
-*3. Review all the questions of each pillars in the Well Architected Tool*
+**3. Review all the questions of each pillars in the Well Architected Tool**
 in thsi part we will see the pillars of well architecture design, and within each of these pillars there are multiple of different questions to extract your requirements risk asumptions and constraints.
 Quastion are variable and no yes/no questions, also it's depend if it for production or pre-production workload.
 
 Pillar 1: Operational Excellence
+
 Q) How do you mitigate deployment risks?
 
 Pillar 2: Security
+
 Q) How do you manage identities for people and machines?
 
 Pillar 3: Reliability
+
 Q) How do you monitor workload resources?
 
 Pillar 4: Performance Efficiency
+
 Q) How do you select the best performance architecture?
 
 Pillar 5: Cost OPtimization
+
 Q) How do you implement cloud financial management?
 
 Pillar 6: Sustainability
-@) How do your development and deployment processes support your sustainability goals?
+
+Q) How do your development and deployment processes support your sustainability goals?
 
 
-*4. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts*
+**4. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts**
 
 
 
