@@ -267,6 +267,265 @@ export AWS_DEFAULT_REGION=us-west-2
 Reference: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
 
 
+Add your environment variables using this way:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942496-73af172e-de2f-4c85-ab78-bee8a3c25f21.png" alt="Sublime's custom image"/>
+</p>
+
+Now check your environment variables:
+```
+env | grep AWS_
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942680-af03da8a-15d5-4b71-9623-2fdec1c7545a.png" alt="Sublime's custom image"/>
+</p>
+
+Now again check the user identity:
+```
+aws sts get-caller-identity
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942622-ac605cb1-210b-4451-b55b-5d0b579475b6.png" alt="Sublime's custom image"/>
+</p>
+
+### Make your Gitpod Enviroment Consistent
+Now if we close this Gitpod environment we will lost everything we did, now what we will do is to make sure that every time we startup our environment it will install again all this automatically.
+
+1-Go to .gitpod.yaml in your repository.
+
+2-Add the below code:
+```
+tasks:
+  - name: aws-cli
+    env:
+      AWS_CLI_AUTO_PROMPT: on-partial
+    init: |
+      cd /workspace
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      unzip awscliv2.zip
+      sudo ./aws/install
+      cd $THEIA_WORKSPACE_ROOT
+vscode:
+  extensions:
+    - 42Crunch.vscode-openapi
+```
+
+
+To save your environment variables to make sure not lost when start up the Gitpod environment:
+```
+gp env  AWS_ACCESS_KEY_ID="AKIAxxxxxxxxxxxxxxZC"
+gp env AWS_SECRET_ACCESS_KEY="08xxxxggfhss1zMYxxxxxxxxxxxxZu+QiAcwfSL"
+gp env AWS_DEFAULT_REGION="us-east-1"
+
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942904-1bcfe0bd-387a-4efc-84e2-e91dd547cb76.png" alt="Sublime's custom image"/>
+</p>
+
+If we go to Gitpod dashboard &rarr; user setting &rarr; Variables: we can see that the variables are saved:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942932-e4907a39-f712-4893-9b5c-bee7e2e9a85f.png" alt="Sublime's custom image"/>
+</p>
+
+Now will move in our right-hand side to “Source Code”:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942999-14661ba1-32b3-40bb-9a8d-53c9ed9af008.png" alt="Sublime's custom image"/>
+</p>
+
+Click to see the changes:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943069-cb83187d-fbcc-4d1a-b4ee-4360d8b71cd8.png" alt="Sublime's custom image"/>
+</p>
+
+To commit it, write your message and hit commit:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943112-e78b53a3-97e6-40cd-b57c-9533f3f13775.png" alt="Sublime's custom image"/>
+</p>
+
+**Problem !!**
+When I tried to commit the code it is not committed and its gives me following error:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943521-8c794f30-d2b6-4481-8f41-4dd56fbb087c.png" alt="Sublime's custom image"/>
+</p>
+
+Also, when I tried to push the code manually it shows me:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943584-4de70813-bccf-47cb-bbb2-1cd40b0ddaf1.png" alt="Sublime's custom image"/>
+</p>
+
+I tried to edit the permissions of Gitpod by following steps:
+(https://gitpod.io/user/integrations)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943612-a1b91330-03fe-4015-995f-aa06ef700503.png" alt="Sublime's custom image"/>
+</p>
+
+Now it shows me a **new error** message:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943649-81bb0eb2-19ab-41fe-848a-9c88759bceaa.png" alt="Sublime's custom image"/>
+</p>
+
+
+**Problem solved by installing Gitpod Chrome extension…**
+
+Now to check if its work or not, go to the dashboard of Gitpod: (will run the configuration automatically).
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943707-9a3710cf-c7dc-46df-b0a9-1301137545c8.png" alt="Sublime's custom image"/>
+</p>
+
+
+## Create a Budget using AWS CLI
+First, we will create a folder in our repository to add the json code on it: right click &rarr; new folder &rarr; make the name “aws” &rarr; create another new folder inside aws folder &rarr; select the name “json”.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943728-803792d5-82fd-4196-92dd-544a712203ce.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219943753-291a3438-e030-453d-9487-45e061a8ac92.png" alt="Sublime's custom image"/>
+</p>
+
+Now create a new file called “budget.json” inside the aws/json and add the following code:
+```
+{
+    "BudgetLimit": {
+        "Amount": "100",
+        "Unit": "USD"
+    },
+    "BudgetName": "Example Tag Budget",
+    "BudgetType": "COST",
+    "CostFilters": {
+        "TagKeyValue": [
+            "user:Key$value1",
+            "user:Key$value2"
+        ]
+    },
+    "CostTypes": {
+        "IncludeCredit": true,
+        "IncludeDiscount": true,
+        "IncludeOtherSubscription": true,
+        "IncludeRecurring": true,
+        "IncludeRefund": true,
+        "IncludeSubscription": true,
+        "IncludeSupport": true,
+        "IncludeTax": true,
+        "IncludeUpfront": true,
+        "UseBlended": false
+    },
+    "TimePeriod": {
+        "Start": 1477958399,
+        "End": 3706473600
+    },
+    "TimeUnit": "MONTHLY"
+}
+
+```
+
+Also, create a new file called “budget-notifications-with-subscribers.json” inside the aws/json and add the following code:
+```
+[
+    {
+        "Notification": {
+            "ComparisonOperator": "GREATER_THAN",
+            "NotificationType": "ACTUAL",
+            "Threshold": 80,
+            "ThresholdType": "PERCENTAGE"
+        },
+        "Subscribers": [
+            {
+                "Address": "example@example.com",
+                "SubscriptionType": "EMAIL"
+            }
+        ]
+    }
+]
+
+```
+
+To create the budget and notification we will use the following command:
+```
+aws budgets create-budget \
+    --account-id $ACCOUNT_ID \
+    --budget file://aws/json/budget.json \
+    --notifications-with-subscribers file://aws/json/notifications-with-subscribers.json
+
+```
+
+
+Finally, create a new file called “alarm-config.json” inside the aws/json and add the following code:
+```
+    {
+        "AlarmName": "DailyEstimatedCharges",
+        "AlarmDescription": "This alarm would be triggered if the daily estimated charges exceeds 1$",
+        "ActionsEnabled": true,
+        "AlarmActions": [
+            "arn:aws:sns:ca-central-1:***REMOVED***:billing-alarm"
+        ],
+        "EvaluationPeriods": 1,
+        "DatapointsToAlarm": 1,
+        "Threshold": 1,
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "TreatMissingData": "breaching",
+        "Metrics": [{
+            "Id": "m1",
+            "MetricStat": {
+                "Metric": {
+                    "Namespace": "AWS/Billing",
+                    "MetricName": "EstimatedCharges",
+                    "Dimensions": [{
+                        "Name": "Currency",
+                        "Value": "USD"
+                    }]
+                },
+                "Period": 86400,
+                "Stat": "Maximum"
+            },
+            "ReturnData": false
+        },
+        {
+            "Id": "e1",
+            "Expression": "IF(RATE(m1)>0,RATE(m1)*86400,0)",
+            "Label": "DailyEstimatedCharges",
+            "ReturnData": true
+        }]
+      }
+
+```
+
+But before that we should create a 
+
+1-SNS topic by running following command (aws sns create-topic –name billing-alarm): This will return for us TopicARN.
+2-Create subscription supply the TopicARN and Email using the below command:
+```
+aws sns subscribe \
+      --topic-arn=”TopicARN” \
+      --protocol=email \
+      --notification-endpoint your@email.com \
+
+```
+3-	Apply
+```
+aws cloudwatch put-metric-alarm –cli-input-json: file://aws/json/alarm-config.json”
+```
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
