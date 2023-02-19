@@ -554,6 +554,16 @@ Q) How do your development and deployment processes support your sustainability 
 Lucid Proof:https://lucid.app/documents/view/b31aca95-f908-42bb-a18a-1bfc21aa2b46
 
 
+**5. Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility**
+AWS services have a variety of technical and service limits that can impact the technical path for technical flexibility. These limits can vary depending on the specific service, but they all have the potential to limit the scalability and performance of an application.
+
+like for example: 
+
+Amazon S3 has a maximum object size of 5TB, which limits the size of files that can be stored in S3 buckets. This could impact applications that require large files to be stored or transferred, as larger files would need to be broken down into smaller chunks before being uploaded or downloaded.
+
+or 
+
+Amazon EC2 has a limit of 20 On-Demand instances per region, which can be increased by submitting a request to AWS Support. This limit impacts the ability to scale up quickly in response to increased demand.
 
 
 
