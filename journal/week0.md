@@ -181,12 +181,90 @@ First of all login to Gitpod using your GitHub account (you will see all your re
 </p>
 
 
+## AWS CloudShell
+AWS CloudShell is a browser-based shell experience for managing and administering your AWS resources in the cloud. It provides a secure, temporary environment with all the tools you need to manage your AWS resources.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219941845-ccbfb393-f26c-425c-bc22-48d513176c7e.png" alt="Sublime's custom image"/>
+</p>
+
+We can also a tool that turn on auto-prompt this can be done by entering the following command (aws - -cli-auto-prompt).
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219941883-e1c748d3-9175-40f0-8888-9598a2c12c90.png" alt="Sublime's custom image"/>
+</p>
+
+To check who is the user “aws sts get-caller-identity” (this because in real environment you will have a lot of account and users and you should check where are you and where the configuration done).
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219941920-dd9a0ac3-fede-40b8-9add-e56a562aba63.png" alt="Sublime's custom image"/>
+</p>
 
 
+### Install AWS CLI
+We will install it on our gitpod environment. “Linux”
+1-	Go to your Gitpod account and open a new Terminal, upper bar &rarr; Terminal &rarr; New Terminal.
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942000-f557c95f-c11a-48bf-ad94-f99304ab6e49.png" alt="Sublime's custom image"/>
+</p>
 
+2-	Here the Code for installation of AWS CLI 
+Reference: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
 
+Change the directory:
+```
+cd /workspace/
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942113-03ee4f73-d188-4293-8f14-9cf18c7e4f28.png" alt="Sublime's custom image"/>
+</p>
+
+Install the zip using curl:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942138-e83679d1-a9df-4f7b-8640-0323fd886360.png" alt="Sublime's custom image"/>
+</p>
+
+Check in directory if the file installed or not:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942193-3ea379f8-4850-47df-9e68-740a536fda78.png" alt="Sublime's custom image"/>
+</p>
+
+Now unzip (unzip is already installed in Gitpod), and after unzipping we will see new directory called aws:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942230-6ea183e7-8f07-4a3f-b93e-801b3f31b356.png" alt="Sublime's custom image"/>
+</p>
+
+Now to begin the installation run:
+```
+sudo ./aws/install
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942261-f9d4a27d-b427-40cd-9f77-7e4905479860.png" alt="Sublime's custom image"/>
+</p>
+
+###To learn more about the directory structure of linux visit “Freebsd.org”###
+
+Now if we check the user of this AWS cli by command, we will get the following error:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219942317-35e87f4b-04e4-4fa5-8be5-249b83642ebb.png" alt="Sublime's custom image"/>
+</p>
+
+We can add user using this command “aws configure”, but we will use alternative, by adding the environment variables.
+
+To check the environment variables, we use: 
+```
+export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+export AWS_DEFAULT_REGION=us-west-2
+```
+Reference: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
 
 
 
