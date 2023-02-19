@@ -260,8 +260,8 @@ We can add user using this command “aws configure”, but we will use alternat
 
 To check the environment variables, we use: 
 ```
-export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+export AWS_ACCESS_KEY_ID=AKIAxxxxxxxxxxxxxxxxMPLE
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFxxxxxxxxxxxxCYEXAMPLEKEY
 export AWS_DEFAULT_REGION=us-west-2
 ```
 Reference: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
