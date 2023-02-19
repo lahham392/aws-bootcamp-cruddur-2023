@@ -521,35 +521,37 @@ already done as shown above.
 in thsi part we will see the pillars of well architecture design, and within each of these pillars there are multiple of different questions to extract your requirements risk asumptions and constraints.
 Quastion are variable and no yes/no questions, also it's depend if it for production or pre-production workload.
 
-Pillar 1: Operational Excellence
+**Pillar 1:** Operational Excellence
 
 Q) How do you mitigate deployment risks?
 
-Pillar 2: Security
+**Pillar 2:** Security
 
 Q) How do you manage identities for people and machines?
 
-Pillar 3: Reliability
+**Pillar 3:** Reliability
 
 Q) How do you monitor workload resources?
 
-Pillar 4: Performance Efficiency
+**Pillar 4:** Performance Efficiency
 
 Q) How do you select the best performance architecture?
 
-Pillar 5: Cost OPtimization
+**Pillar 5:** Cost OPtimization
 
 Q) How do you implement cloud financial management?
 
-Pillar 6: Sustainability
+**Pillar 6**: Sustainability
 
 Q) How do your development and deployment processes support your sustainability goals?
 
 
 **4. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts**
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/219967776-0c270663-6c8d-43e7-a907-3451cd9bd29c.png" alt="Sublime's custom image"/>
+</p>
 
-
-
+Lucid Proof:https://lucid.app/documents/view/b31aca95-f908-42bb-a18a-1bfc21aa2b46
 
 
 
