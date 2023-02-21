@@ -5,3 +5,13 @@ Answer is:
 * The size of docker image is much smaller because they just have to implement one layer.
 * You can run and start docker containers much faster than the VM.
 * You can run a VM image of any OS on any other OS host, you can not do that in docker, because your docker image may not compatible with Kernel in the host “for windows below 10”. You can solve this issue using Docker Toolbox.
+
+
+Where do containers live?
+
+* Containers live in a container repository “special type of storage for containers”.
+* Many companies have their own private repositories where they host or store the containers.
+There is also a public repositories for Docker containers where you can browse and find any application container that you want “Docker Hub”.
+
+
+
