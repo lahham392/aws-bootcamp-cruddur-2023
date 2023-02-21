@@ -87,7 +87,10 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
   <img src="https://user-images.githubusercontent.com/82225825/220286894-377a04fb-1ccd-4934-9b6f-2a265d087d1e.png" alt="Sublime's custom image"/>
 </p>
 
-3-	Run cmd command “python3 -m flask run --host=0.0.0.0 --port=4567
+3-	Run cmd command:
+```
+python3 -m flask run --host=0.0.0.0 --port=4567
+```
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220287047-34bbdb8d-2159-4cef-956d-067220a08c53.png" alt="Sublime's custom image"/>
