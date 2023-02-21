@@ -219,6 +219,7 @@ We can notice it the below photo, that the environment variables not set, so bec
 </p>
 
 **To fix it do follow**
+
 1-	Run:
 ```
 set FRONTEND_URL="*"
