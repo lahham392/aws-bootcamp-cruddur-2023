@@ -14,4 +14,35 @@ Where do containers live?
 There is also a public repositories for Docker containers where you can browse and find any application container that you want “Docker Hub”.
 
 
+### Installing Docker Extention in Gitpod
+Install Docker extension on your Gitpod environment: mouse right click &rarr; go to “view” &rarr; go to extensions &rarr; write in search “Docker” &rarr; click “install”
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220284580-3018f5e1-554d-469a-96d8-b8cc01fb2960.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220284654-09192bb6-af6c-430b-ba62-52e60c503ad6.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220284786-13fcf631-3b4c-4470-82fe-7a20b893f557.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
 
