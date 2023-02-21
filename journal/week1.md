@@ -30,6 +30,8 @@ Install Docker extension on your Gitpod environment: mouse right click &rarr; go
 
 ## Now let’s start containerizing our backend:
 
+### Building Docker File:
+
 1- In your Gitpod go to your backend folder and create a new file call it “Dockerfile”, in this file we will put our docker configuration.
 2- Copy the below code:
 ```
@@ -48,7 +50,7 @@ EXPOSE ${PORT}
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 
 ```
-### Code explanation:
+#### Code explanation:
 ```
 FROM python:3.10-slim-buster (it will pull the python container image from dockerhub)
 
@@ -71,6 +73,53 @@ EXPOSE ${PORT}
 # it represent the following command “python3 -m flask run --host=0.0.0.0 --port=4567”
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 ```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220285803-c9ddd690-eb62-4be8-ae5b-6d6e41d27f16.png" alt="Sublime's custom image"/>
+</p>
+
+**Now, lets try this configuration manually in our environment:**
+1-	Go to /backend-flsk
+2-	Run “pip3 install -r requirements.txt”
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220286894-377a04fb-1ccd-4934-9b6f-2a265d087d1e.png" alt="Sublime's custom image"/>
+</p>
+
+3-	Run cmd command “python3 -m flask run --host=0.0.0.0 --port=4567
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287047-34bbdb8d-2159-4cef-956d-067220a08c53.png" alt="Sublime's custom image"/>
+</p>
+
+4- Check ports tap in Gitpod we will see:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287216-4f15f7de-2a3d-4409-9b0b-68ba384bfc52.png" alt="Sublime's custom image"/>
+</p>
+
+5- Make it public click on this icon:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287357-e94d0a3b-bc4c-4644-9999-7c1731f3263c.png" alt="Sublime's custom image"/>
+</p>
+
+6- Click in the link address we will see the following:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287591-61c0f65b-274f-4ed1-93ed-b63311101f97.png" alt="Sublime's custom image"/>
+</p>
+
+7- Check the terminal:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287713-033df10c-4585-4cfe-955e-aa2177e3e29a.png" alt="Sublime's custom image"/>
+</p>
+
+NOTE: Actually, the server is running well, it need some more configuration we will do it later… (app need 2 environment variables, frontend URL and backend URL).
+
+
+**Question, we usually run the docker image using run command, why here we used python3 to run the image?**
+Ans. Run is a command that were actually running to create a layer in the image, but cmd it is a command that that container is going to run when it starts up.
+[CMD] is only one in the docker file not multiple such as RUN, so this marks for docker file that this is the command you want to execute as an entry point. 
+
+
 
 
 
@@ -82,10 +131,28 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 </p>
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
 
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
 
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
