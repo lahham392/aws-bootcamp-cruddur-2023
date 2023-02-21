@@ -78,7 +78,9 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 </p>
 
 **Now, lets try this configuration manually in our environment:**
+
 1-	Go to /backend-flsk
+
 2-	Run “pip3 install -r requirements.txt”
 
 <p align="center">
@@ -120,7 +122,69 @@ Ans. Run is a command that were actually running to create a layer in the image,
 [CMD] is only one in the docker file not multiple such as RUN, so this marks for docker file that this is the command you want to execute as an entry point. 
 
 
+### Build Docker Image from Docker File
 
+1-	Make sure that you are in (/aws-bootcamp-cruddur-2023) directory.
+
+2-	Paste the following command (-t represent the name of the container…)
+```
+docker build -t backend-flask ./backend-flask
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220290145-f2695b3f-5dad-4f44-a171-ed4d8c5a1f0f.png" alt="Sublime's custom image"/>
+</p>
+
+And as we can see it successfully built:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220290263-65e94eec-16b2-49e6-ad57-fb00363520e5.png" alt="Sublime's custom image"/>
+</p>
+
+Now if we checked the Docker extension: we can see the builded image.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220290528-890b3493-c4d0-4fcf-9d11-996ef06a7bf6.png" alt="Sublime's custom image"/>
+</p>
+
+Also if I write this command, you can see the running images:
+```
+docker images
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220290719-620fda90-db6a-402a-913e-00ec750fb4e9.png" alt="Sublime's custom image"/>
+</p>
+
+### Run Docker Container
+
+1-	Run the following command
+```
+docker run --rm -p 4567:4567 -it backend-flask
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220291086-d69a22cd-0ab5-46ff-9341-34aa561372a7.png" alt="Sublime's custom image"/>
+</p>
+
+Notice the green dot in Ports tap:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220291229-e7511646-152e-4ae3-ad24-e349dc1be108.png" alt="Sublime's custom image"/>
+</p>
+
+Check the server if running by visiting the:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220291779-4b3ca901-3fbf-4bb5-902f-c57121c5bae2.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
 
@@ -136,9 +200,6 @@ Ans. Run is a command that were actually running to create a layer in the image,
 </p>
 
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
 
 
 <p align="center">
@@ -151,8 +212,51 @@ Ans. Run is a command that were actually running to create a layer in the image,
 </p>
 
 
+
+
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
 
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
