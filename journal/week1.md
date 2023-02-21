@@ -177,65 +177,70 @@ Check the server if running by visiting the:
 </p>
 
 
+#### To make it run temporarily, make the following instructions:
 
-
-
-
-
-
-
-
+1- Run the following command, to set the enviroment variables:
+```
+FRONTEND_URL="*" BACKEND_URL="*" docker run --rm -p 4567:4567 -it backend-flask
+```
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220293158-f8757568-fed5-432c-aa7c-62a44d43aef3.png" alt="Sublime's custom image"/>
 </p>
 
-
-
-
-
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220293264-315e7d24-bc38-470b-aa97-223f0a6e74eb.png" alt="Sublime's custom image"/>
 </p>
 
+Server not working
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220293420-a4a0f838-b218-482b-bd82-5efacfc58ea8.png" alt="Sublime's custom image"/>
 </p>
 
-
-
+2- To check the logs of the container: Docker extension &rarr; right click &rarr; view logs.
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220294025-23086879-519a-4a5d-a944-d8ed31c31687.png" alt="Sublime's custom image"/>
 </p>
 
-
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220294145-58e43dca-78c0-4ea4-9dc3-bcec4893c6e8.png" alt="Sublime's custom image"/>
 </p>
 
-
-
+3- Another way, check the environment variables of the container, go to Docker extension &rarr; right click &rarr; Attach shell. (now we will have an access to the container cmd)
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220294484-4e7501e6-ae93-435d-a430-8afe7be779e4.png" alt="Sublime's custom image"/>
 </p>
 
-
+We can notice it the below photo, that the environment variables not set, so because that we got 404 error.
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220294576-9a6fbd50-9453-4d5e-ab4f-2a40c501280f.png" alt="Sublime's custom image"/>
 </p>
 
-
-
+**To fix it do follow**
+1-	Run:
+```
+set FRONTEND_URL="*"
+```
+2-	Run:
+```
+set BACKEND_URL="*"
+```
+3-	Run:
+```
+docker run --rm -p 4567:4567 -it  -e FRONTEND_URL -e BACKEND_URL backend-flask
+```
+And yes it runs:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220295332-53b6d8b6-1187-4588-8ec2-d83530bae4e7.png" alt="Sublime's custom image"/>
 </p>
 
+WORKED!!
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220295423-638005f4-9ffa-4a84-9ea5-1bb4ca4acc5a.png" alt="Sublime's custom image"/>
 </p>
 
 
