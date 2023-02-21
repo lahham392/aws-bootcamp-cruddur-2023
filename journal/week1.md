@@ -1,5 +1,6 @@
 # Week 1 — App Containerization
 The first question we should ask ourselves, why we need to use the containers if we have already the code and we can run immediately?
+
 Answer is: 
 The size of docker image is much smaller because they just have to implement one layer.
 You can run and start docker containers much faster than the VM.
