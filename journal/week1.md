@@ -933,6 +933,18 @@ Refrance: https://towardsdatascience.com/using-multi-stage-builds-to-make-your-d
 
 ## Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 
+1. Use Multi-Stage Builds: Multi-stage builds are a great way to optimize Dockerfiles, as they allow you to create multiple images from the same Dockerfile. This allows you to separate the build environment from the runtime environment, resulting in smaller images and improved security.
+
+2. Use .dockerignore File: A .dockerignore file allows you to specify files and directories that should not be included in the image. This helps reduce image size and improve build times by excluding unnecessary files from being included in the image.
+
+3. Keep Containers Secure: It is important to keep your containers secure by using minimal base images, running as non-root users, and using security scanning tools such as Clair or Anchore to scan for vulnerabilities in your images.
+
+4. Leverage Caching: Caching can be used to improve build times by reusing layers that have already been built instead of rebuilding them each time a change is made. This can be done by using the --cache-from flag when building an image or by using a caching service such as Google Container Registry or Amazon ECR Image Scanning Service.
+
+5. Use Labels: Labels are a great way to add metadata to your images and can be used for versioning, tracking, and other purposes. They can also be used for automated deployment processes such as Kubernetes or AWS ECS tasks.
+
+
+
 ## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 
 ## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
