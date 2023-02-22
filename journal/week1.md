@@ -553,8 +553,7 @@ The rest of information are just mocked to make it as realistic
 **It’s Working!!!**
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/220519147-cc442f4f-27d6-4d2f-8342-c9acf590ca81.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519147-cc442f4f-27d6-4d2f-8342-c9acf590ca81.png" alt="Sublime's custom image"/>
 </p>
 
 3.10  Commit the changes
@@ -744,4 +743,82 @@ The rest of information are just mocked to make it as realistic
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
+
+
+# HomeWork
+
+* Run the dockerfile CMD as an external script
+
+* Push and tag a image to DockerHub (they have a free tier)
+
+1- Sign in to Docker Hub account
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220521700-53a9d669-e31a-4c3b-8237-4fb46d5dc750.png" alt="Sublime's custom image"/>
+</p>
+
+2- Create a repository 
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220522328-821040f5-82db-4c47-9b1f-4d4cee5438e9.png" alt="Sublime's custom image"/>
+</p>
+
+3- Check your images
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220522921-ee21f818-b71a-4e6e-8a90-8256378e26cf.png" alt="Sublime's custom image"/>
+</p>
+
+4- Login to Docker Hub from your terminal
+
+```
+docker login
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220523256-be5f4f37-0f94-45f5-bd72-f8573de214dd.png" alt="Sublime's custom image"/>
+</p>
+
+5- Now tag the locally created image to the docker hub:
+
+```
+docker tag local-image:tagname new-repo:tagname
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220524149-85e1abfb-c428-46ff-a927-b798c3694ab5.png" alt="Sublime's custom image"/>
+</p>
+
+6- Push the image to the Docker hub using the push command:
+```
+docker push new-repo:tagname
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220526476-b20b408b-ec41-4020-9c28-5fd7c7e99a4d.png" alt="Sublime's custom image"/>
+</p>
+
+DONE!! Image published
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220526658-4f8780f8-5e5d-4fb5-989c-4f4461b8cdba.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+
+
+* Use multi-stage building for a Dockerfile build
+
+* Implement a healthcheck in the V3 Docker compose file
+
+* Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
+
+* Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
+
+* Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
+
+
+
+
+
+
+
+
 
