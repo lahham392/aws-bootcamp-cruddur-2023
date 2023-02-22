@@ -747,9 +747,15 @@ The rest of information are just mocked to make it as realistic
 
 # HomeWork
 
-* Run the dockerfile CMD as an external script
+## Run the dockerfile CMD as an external script
 
-* Push and tag a image to DockerHub (they have a free tier)
+we did this when we run our docker image using cmd command "python3 -m flask run --host=0.0.0.0 --port=4567"
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220287047-34bbdb8d-2159-4cef-956d-067220a08c53.png" alt="Sublime's custom image"/>
+</p>
+
+## Push and tag a image to DockerHub (they have a free tier)
 
 1- Sign in to Docker Hub account
 <p align="center">
@@ -800,19 +806,121 @@ DONE!! Image published
 </p>
 
 
+## Use multi-stage building for a Dockerfile build
+
+With multi-stage builds, you use multiple FROM statements in your Dockerfile. Each FROM instruction can use a different base, and each of them begins a new stage of the build. the main benefit of making multi stages is to decrease the docker image size.
+
+
+### Docker Image Idea
+
+Lets say that we need to build an docker image that will do a process, and to done with this process it will need a Ubunto OS and another 2 tools.
+these 2 tools will be used in in the first stage to merge 2 files, and after that in the final stage we will not use these tools any more. in this case we can make a multi-stage docker image to reduce the app size.
+
+### Normal Image
+
+if we are going to build the image in a single stage as shown in below code:
+
+```
+FROM ubuntu:20.04
+# BUNDLE LAYERS
+RUN apt-get update -y && apt install -y --no-install-recommends \
+  curl \
+  osmium-tool \
+ && rm -rf /var/lib/apt/lists/*
+RUN mkdir /osmfiles \
+ && mkdir /merged \
+ && curl https://download.geofabrik.de/europe/monaco-latest.osm.pbf -o /osmfiles/monaco.osm.pbf \
+ && curl https://download.geofabrik.de/europe/andorra-latest.osm.pbf -o /osmfiles/andorra.osm.pbf \
+ && osmium merge /osmfiles/monaco.osm.pbf /osmfiles/andorra.osm.pbf -o /merged/merged.osm.pbf
+```
+in summary: This dockerfile does exactly what we need: install curl and osmium, download the files and merge them. We end up with the merged file that resides in /merged.
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+The total size of image is:
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+### Multi-Stage Image
+
+In this part we’ll focus on leaving behind the tools that we used to build the merged file
+check the code below:
+
+```
+FROM ubuntu:20.04 AS final
+FROM ubuntu:20.04 as build
+# BUNDLE LAYERS
+RUN apt-get update -y && apt install -y --no-install-recommends \
+  curl \
+  osmium-tool \
+ && rm -rf /var/lib/apt/lists/*
+RUN mkdir /osmfiles \
+ && mkdir /merged \
+ && curl http://download.geofabrik.de/europe/monaco-latest.osm.pbf -o /osmfiles/monaco.osm.pbf \
+ && curl http://download.geofabrik.de/europe/andorra-latest.osm.pbf -o /osmfiles/andorra.osm.pbf \
+ && osmium merge /osmfiles/monaco.osm.pbf /osmfiles/andorra.osm.pbf -o /merged/merged.osm.pbf
+FROM final
+RUN mkdir /merged
+COPY --from=build /merged /merged
+```
+As you see we use two stages: one called build and one called final. Install curl and osmium in our build-stage. Use them to create the merged file and finally just copy the merged folder to the final stage.
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+The total size of image is:
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
 
 
-* Use multi-stage building for a Dockerfile build
 
-* Implement a healthcheck in the V3 Docker compose file
 
-* Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 
-* Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 
-* Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Refrance: https://towardsdatascience.com/using-multi-stage-builds-to-make-your-docker-image-almost-10x-smaller-239068cb6fb0
+
+## Implement a healthcheck in the V3 Docker compose file
+
+## Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
+
+## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
+
+## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
 
 
 
