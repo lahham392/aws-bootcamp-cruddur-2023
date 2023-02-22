@@ -246,6 +246,159 @@ WORKED!!
 
 
 
+**To Run Container in Background**
+```
+docker container run --rm -p 4567:4567 -d backend-flask
+```
+
+## Now let’s start containerizing our backend:
+
+### Building Docker File:
+
+1-	Move to frontend directory “cd /frontend-react-js”
+
+2-	Install NPM using
+```
+npm i
+```
+
+3-	Make a new file in your frontend-react-js and name it ‘Dockerfile’
+
+4-	Copy the code content inside Docker file ‘check below’
+```
+FROM node:16.18
+
+ENV PORT=3000
+
+COPY . /frontend-react-js
+WORKDIR /frontend-react-js
+RUN npm install
+EXPOSE ${PORT}
+CMD ["npm", "start"]
+
+```
+
+5-	Back to main directory “cd ..”
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220513516-409c0779-f726-472d-9b1d-bbfebbd3e6c2.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220513574-12b12414-f3b1-4ba5-bd65-f033ffb8b5a5.png" alt="Sublime's custom image"/>
+</p>
+
+### Building Docker Image from Docker File:
+
+Using the below command:
+```
+docker build -t frontend-react-js ./frontend-react-js
+```
+
+### Run Docker Image:
+
+Using the below command:
+```
+docker run -p 3000:3000 -d frontend-react-js
+```
+
+## Creating Docker Compose YAML
+
+* Docker Compose is a structured way to contain very normal docker comments.
+* with docker compose file we take the whole comments with it is configurations and map it into a file “as a structured comments”.
+* A tool makes running multiple docker containers with all these configurations in much easier way, That is **Docker Compose…**
+
+1-	Make a new file in your root directory and name it ‘docker-compose.yaml’
+
+2-	Copy the file content:
+```
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./backend-flask
+    ports:
+      - "4567:4567"
+    volumes:
+      - ./backend-flask:/backend-flask
+  frontend-react-js:
+    environment:
+      REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-react-js:/frontend-react-js
+
+# the name flag is a hack to change the default prepend folder
+# name when outputting the image names
+networks: 
+  internal-network:
+    driver: bridge
+    name: cruddur
+
+```
+3-	Run following command “docker compose up” or by right click on the compose file and clicking compose up.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220514906-58596d97-be67-466a-9248-7bf85c0cbfe1.png" alt="Sublime's custom image"/>
+</p>
+
+It is strating:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220514987-a26bba25-1d64-4791-b1b5-c72dfde0d0fd.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220515032-61db97cc-e6c6-4bbc-a213-3ada07985715.png" alt="Sublime's custom image"/>
+</p>
+
+Open the link Adress:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220515114-532dff6b-9f97-4c0c-8645-7b241f13daf8.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
 
 
 <p align="center">
