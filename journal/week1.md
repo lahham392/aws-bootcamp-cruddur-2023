@@ -362,6 +362,114 @@ Open the link Adress:
   <img src="https://user-images.githubusercontent.com/82225825/220515114-532dff6b-9f97-4c0c-8645-7b241f13daf8.png" alt="Sublime's custom image"/>
 </p>
 
+## Create the notification feature (Backend and Front)
+
+### OpenAPI file
+Let’s check our API file and how it looks:
+
+Go to backend directory &rarr; click on ‘openapi-03.yml’ &rarr; for more information about the API go to API extension.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220515437-b79cebaa-bd00-4999-a000-afbe5042dadf.png" alt="Sublime's custom image"/>
+</p>
+
+The reason for using open API is because if we want to use API Gateway, we can import this and it will automatically created, also used to test the API.
+The OpenAPI.yml file contains information about the API such as its endpoints, operations, parameters, and security definitions. It can also be used to generate documentation and client libraries for interacting with the API.
+
+
+
+### How to run your application again
+Just by entering the Gitpod, you can start front-end and back-end containers, also you should start up the docker compose.
+If front-end container is not running, make sure to install npm, go to frontend directory and run “npm i”.
+
+
+### Fix Notification Section
+
+If we are trying to access the notification tap we will get the following page:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220515740-85bd84e6-c0b9-42ff-8b87-9cf3f34f5055.png" alt="Sublime's custom image"/>
+</p>
+
+### How will we configure the Notification?
+
+**1-	Update the OpenAPI to add notification:**
+We want to add an endpoint to our application, go to openapl-03.yml file and let’s notice the following:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220515936-16853738-2ec3-46ae-ad08-2ba5e67474ab.png" alt="Sublime's custom image"/>
+</p>
+
+If we check the current openAPI path, we will notice that there are multiple paths, for example the home, search, and message groups.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220516028-6a6fad53-2e03-4e65-8aa2-5e90dc625529.png" alt="Sublime's custom image"/>
+</p>
+
+
+**2- Now we will add a new path for notifications.**
+2.1-  In your right hand there are a block called ‘Paths’ &rarr; click on the 3 dots &rarr; ‘add new path’
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220516188-62776c98-0bfa-4103-be77-af80b65ec8fa.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220516240-4c01c7ca-d8f6-4c69-9764-0bfd75919abe.png" alt="Sublime's custom image"/>
+</p>
+
+2.2-  Add a new API code:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220516377-274398ee-5ae9-40a7-ade1-40bcc2ab2f70.png" alt="Sublime's custom image"/>
+</p>
+
+#### Code explanation:
+
+**/api/activities/notifications:** when we make the API usually good to scope them with /api our application will be served on API, it will be like (api.crudder.com)
+
+**description:** 'Return a feed of activity for all of those that i follow': it is just a description of our API, this code will be similar for the home page with some little changes.
+
+**tags:** - activities : this will allow you to group, ‘what kind of stuff you are going to pass’
+
+**responses: '200':** indicates that the request has been passed.
+
+**application/json:** we want the application to return application Json (that’s common for the applications to just communicate in Json to be explicit).
+
+**schema:** also we are going to specifiy a schema, it is just a way of refactoring , just saying reference down below in the code.
+
+2.3  Commit your changes and push them to the repository
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220516819-36f64455-1d66-4700-bedc-888c668da78a.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+**3- Defining a New Endpoint in Backend**
+
+3.1 Back to your backend application “app.py” (the entry point of this application is App.py)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220517265-80b3974c-5976-4ab9-9a1a-fe1d92128ee5.png" alt="Sublime's custom image"/>
+</p>
+
+We can see from above photo that we importing 9 different services, the reason of setting them up is for a concept called Rails Service Object, the idea of this concept is to break your code into concrete services, the advantage of this is that when you want to break these off into microservices as in below photo:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220517328-74a7db3e-1faf-4a72-a698-516985f13571.png" alt="Sublime's custom image"/>
+</p>
+
+Actually, we can replace these parts of the code with API gateway and just go to these pythons as a containers or even put them in lambda.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220517375-e3bf6afc-122d-4873-897e-8b3b3497daf5.png" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
 
@@ -376,6 +484,16 @@ Open the link Adress:
 
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
 
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
@@ -388,6 +506,16 @@ Open the link Adress:
 
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
 
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
@@ -400,6 +528,16 @@ Open the link Adress:
 
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
 
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
@@ -410,6 +548,112 @@ Open the link Adress:
   <img src="" alt="Sublime's custom image"/>
 </p>
 
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
 
