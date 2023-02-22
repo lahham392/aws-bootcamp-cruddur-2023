@@ -880,13 +880,18 @@ COPY --from=build /merged /merged
 As you see we use two stages: one called build and one called final. Install curl and osmium in our build-stage. Use them to create the merged file and finally just copy the merged folder to the final stage.
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220610329-b13cdde2-48a2-4fee-9700-001272f0e12c.png" alt="Sublime's custom image"/>
 </p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220610652-00156c2c-c625-44ef-b899-e411f4aaa3a2.png" alt="Sublime's custom image"/>
+</p>
+
 
 The total size of image is:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220610806-052a37e7-9d2b-4424-9b55-0ce904d56c48.png" alt="Sublime's custom image"/>
 </p>
 
 
