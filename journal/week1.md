@@ -835,14 +835,24 @@ RUN mkdir /osmfiles \
 ```
 in summary: This dockerfile does exactly what we need: install curl and osmium, download the files and merge them. We end up with the merged file that resides in /merged.
 
+**to build the image**
+```
+docker build -t myimage:1.0 .
+```
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220609634-a8c7f148-8b3f-4828-bf40-81c576d96ec9.png" alt="Sublime's custom image"/>
 </p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220609783-c3355fa7-65b3-47d8-bdfa-00dea9917ef8.png" alt="Sublime's custom image"/>
+</p>
+
 
 The total size of image is:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220609965-1bd0817e-ef69-477b-bbac-abeeed89b00d.png" alt="Sublime's custom image"/>
 </p>
 
 ### Multi-Stage Image
