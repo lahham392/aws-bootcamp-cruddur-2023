@@ -895,41 +895,32 @@ The total size of image is:
 </p>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Refrance: https://towardsdatascience.com/using-multi-stage-builds-to-make-your-docker-image-almost-10x-smaller-239068cb6fb0
 
 ## Implement a healthcheck in the V3 Docker compose file
+
+"depends_on" is no longer supported in compose version 3. So, unless your docker-compose version is <3 the healthcheck will not help you much. The healthcheck sets the status of the container (starting, healthy or unhealthy) but docker-compose does not wait until backend container is healthy before starting the app-test. There is a detailed explanation about how depends_on works in Control startup and shutdown order in Compose
+
+As a side note, the healthcheck in your compose file sets the status of the app-test container and not backend.
+
+Therefore to control when the api-test can start, you have to wrap the service command of the container. For your particular case the following will do the job:
+```
+bash -c 'while [[ "$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' https://backend:3015/readiness)" != "200" ]]; do echo ..; sleep 5; done; echo backend is up; <service_command>'
+```
+
+It tries to connect to backend every 5 seconds (the connection timeout is 2s). When the received HTTP status code is 200 OK the loop ends and it executes the <service_command>
+
+The relevant docker-compose part:
+```
+api-test:
+    restart: always
+    command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' uds-mock-server:4000/readiness)" != "200" ]]; do echo ..; sleep 5; done; echo backend is up;npm start'
+    depends_on:
+      - backend
+      ...
+```
+
+
 
 ## Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 
@@ -946,6 +937,18 @@ Refrance: https://towardsdatascience.com/using-multi-stage-builds-to-make-your-d
 
 
 ## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
+
+
+To install it in our machine, check the following link: https://docs.docker.com/desktop/install/windows-install/#:~:text=Double%2Dclick%20Docker%20Desktop%20Installer,bottom%20of%20your%20web%20browser.
+
+Photo from my machine
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220736507-b5427e9a-e7af-4824-bce6-09e58fd1a1c9.png" alt="Sublime's custom image"/>
+</p>
+
+we can run our containers images and compose files in our machine by pull the needed file from our Github repository...
+All instructions will almost same.
+
 
 ## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
 
