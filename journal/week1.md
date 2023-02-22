@@ -393,6 +393,8 @@ If we are trying to access the notification tap we will get the following page:
 
 ### How will we configure the Notification?
 
+#### Backend Notification
+
 **1-	Update the OpenAPI to add notification:**
 We want to add an endpoint to our application, go to openapl-03.yml file and let’s notice the following:
 
@@ -479,18 +481,21 @@ Actually, we can replace these parts of the code with API gateway and just go to
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220517813-588f0408-6a0c-46e4-9ea2-072d0a67e05e.png" alt="Sublime's custom image"/>
 </p>
+
 The above is to set up the CORS (will be explained later in the course).
 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220517891-23b8698b-b528-47fe-9448-eace4aa7510c.png" alt="Sublime's custom image"/>
 </p>
+
 This is how to define routes for a flask app.
 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220517964-3bbf324d-c2fe-4639-a8f8-392b3775ad26.png" alt="Sublime's custom image"/>
 </p>
+
 Another route for the flask app, notice that for POST request we need cross_origin…
 
 3.2 We are looking for API home activities, to copy it and make it for the notifications.
@@ -500,59 +505,115 @@ Another route for the flask app, notice that for POST request we need cross_orig
 </p>
 
 3.3-	Paste the code below this one and perform the below changes:
-  a.	Replace /home  /notifications.
-  b.	Change data from HomeActivities to  NotificationsActivities
+
+  a.	Replace /home &rarr; /notifications.
+  
+  b.	Change data from HomeActivities to &rarr; NotificationsActivities
+  
   c.	Create a new file in /backend-flask/services and name it ‘notifications_activities.py’
-  d.	Change data_home to  data_notifications().
+  
+  d.	Change data_home to &rarr; data_notifications().
 
 
+3.4-	Now lets back in the top of app.py and add the new service to be imported:
 
+as shown below:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220518679-ba444415-b125-4f8f-8e5c-c9a4a3120b84.png" alt="Sublime's custom image"/>
 </p>
 
-
+3.5-	Go to “notifications_activities.py” and copy what inside “home_activites.py” because they are similar with a little of changes.
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220518729-8f21d619-7925-49ac-8a7c-4705fa8699c3.png" alt="Sublime's custom image"/>
 </p>
 
+#### Let’s explain the code inside:
+
+**from datetime import datetime, timedelta, timezone:** this import date times and timedelta, time zones because we to mock out the data .
+
+**'created_at': (now - timedelta(days=2)).isoformat(), 'expires_at': (now + timedelta(days=5)).isoformat(), :** it is a way to mock some data, it mean this created before 2 days and going to expire after 5 days.
+
+The rest of information are just mocked to make it as realistic
+
+3.6-	Change class HomeActivities: to &rarr; NotificationsActivities:.
+
+
+3.7-	Copy the rest of code from home_activities.py to notifications_activities.py and do the following:
+
+  a.	Change the content of page (handel: coco, message: Im a white unicorn).
+  
+  b.	Delete the rest examples 1 is enough for now.
+  
+3.8-	Note when you make major changes like add new endpoint you have to restart the app.
+
+
+3.9-	Now let’s test our new backend service (/api/activities/notifications) by adding it to the path of backend URL.
+
+**It’s Working!!!**
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="![image](https://user-images.githubusercontent.com/82225825/220519147-cc442f4f-27d6-4d2f-8342-c9acf590ca81.png)
+" alt="Sublime's custom image"/>
 </p>
 
+3.10  Commit the changes
 
+
+#### Backend Notification
+
+1-	Go to ‘/frontend-react-js/’ &rarr; app.js
+
+2-	Add a new import for our notifications 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519385-0b047d91-b2e5-4b9d-ad58-00d53d66cc33.png" alt="Sublime's custom image"/>
 </p>
 
+3-	Delete (impot process from ‘process’)
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519416-155e222a-ed26-4660-a48d-bd2f1de20533.png" alt="Sublime's custom image"/>
 </p>
 
-
+4-	Now we are going to add a new path for notifications:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519519-7bf58d22-b6ea-43aa-a065-8928fcf3770d.png" alt="Sublime's custom image"/>
 </p>
 
+5-	Now we need to create file “./pages/NotificationsFeedPage.js'”
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519549-32787186-f817-46d2-90de-35d08a05e0a2.png" alt="Sublime's custom image"/>
 </p>
 
-
+6-	Create another file for css ““./pages/NotificationsFeedPage.css'
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519607-848edca7-25f2-4f3c-9e83-5018814ec966.png" alt="Sublime's custom image"/>
 </p>
 
+7-	The content in .js is very similar to HomeFeedPage, so we are going to copy from them the content and make our changes:
+  a.	Change ‘import './HomeFeedPage.css';’ to &rarr; “import './NotificationsFeedPage.css';”
+  
+  b.	Change “const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`” &rarr; to “const backend_url =        `${process.env.REACT_APP_BACKEND_URL}/api/activities/notifications`”.
+  
+  c.	Change “export default function HomeFeedPage() {” to &rarr; “export default function NotificationsFeedPage() {”.
+  
+  d.	Change “    <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />” to &rarr; “<DesktopNavigation user={user} active={'notifications'} setPopped={setPopped} />”
+  
+  e.	Also change  “ <ActivityFeed title="Home"” to &rarr; title=”Notifications”
+                                   
+                                   
+8-	The content in .css is also same we are going to copy them.
+                                   
+9-	Now check you frontend if it is work or not:
 
+**Yes!, notie that the notification page is loaded, also the content what we added is shown:**
+                                   
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220519995-836e3a66-5379-43c1-b444-a89c2d0fc8a1.png" alt="Sublime's custom image"/>
 </p>
 
 
