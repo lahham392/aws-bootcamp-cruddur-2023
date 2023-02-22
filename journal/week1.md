@@ -462,31 +462,49 @@ We can see from above photo that we importing 9 different services, the reason o
 
 Actually, we can replace these parts of the code with API gateway and just go to these pythons as a containers or even put them in lambda.
 
+
+#### App.py Code explanation:
+
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220517375-e3bf6afc-122d-4873-897e-8b3b3497daf5.png" alt="Sublime's custom image"/>
 </p>
+**app = Flask(__name__):** In this part we load the application.
+
+**frontend =os.getenv('FRONTEND_URL'), backend=os.getenv('BACKEND_URL'):** it is a way of getting environment variables into the application in front-end and back-end.
+
+**origins = [frontend, backend]:** for setting up the origins.
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220517813-588f0408-6a0c-46e4-9ea2-072d0a67e05e.png" alt="Sublime's custom image"/>
 </p>
-
+The above is to set up the CORS (will be explained later in the course).
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220517891-23b8698b-b528-47fe-9448-eace4aa7510c.png" alt="Sublime's custom image"/>
 </p>
+This is how to define routes for a flask app.
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220517964-3bbf324d-c2fe-4639-a8f8-392b3775ad26.png" alt="Sublime's custom image"/>
 </p>
+Another route for the flask app, notice that for POST request we need cross_origin…
 
-
+3.2 We are looking for API home activities, to copy it and make it for the notifications.
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220518179-e381846e-06a8-4db2-9e3c-25d52ed579e0.png" alt="Sublime's custom image"/>
 </p>
+
+3.3-	Paste the code below this one and perform the below changes:
+  a.	Replace /home  /notifications.
+  b.	Change data from HomeActivities to  NotificationsActivities
+  c.	Create a new file in /backend-flask/services and name it ‘notifications_activities.py’
+  d.	Change data_home to  data_notifications().
+
 
 
 <p align="center">
