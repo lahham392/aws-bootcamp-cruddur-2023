@@ -1047,8 +1047,7 @@ sudo yum install git
 
 
 <p align="center">
-  <img src="<img width="960" alt="image" src="https://user-images.githubusercontent.com/82225825/220829342-68f3ada2-b299-4a14-95c1-171fa54bca91.png">
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220829342-68f3ada2-b299-4a14-95c1-171fa54bca91.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -1059,11 +1058,41 @@ git clone <repo url>
 ```
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="<img width="805" alt="image" src="https://user-images.githubusercontent.com/82225825/220836561-4a696aaf-e380-4a5f-96a1-2ac5fd3e7bc7.png">
+" alt="Sublime's custom image"/>
 </p>
+
+Build the image on ec2, navigate to the cloned repo and write below:
+
+```
+sudo docker build -t myec2test .
+```
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220837456-174797ef-adf7-462c-9822-6d9c852e95b9.png" alt="Sublime's custom image"/>
 </p>
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220837556-24b52e9e-0e87-419a-aca7-b7528b3553ed.png" alt="Sublime's custom image"/>
 </p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220837875-497c6b9c-ec7b-4aff-b061-0cd3c9e44093.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220838004-bd709225-e2ec-45ff-b2b7-53090fb26ccd.png" alt="Sublime's custom image"/>
+</p>
+
+Now run the image:
+ 
+```
+sudo docker run Image_ID
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220839363-e334860e-bcc7-431a-87e2-baae763c0be3.png" alt="Sublime's custom image"/>
+</p>
+
+
+
