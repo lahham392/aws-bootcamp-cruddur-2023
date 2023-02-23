@@ -952,11 +952,118 @@ All instructions will almost same.
 
 ## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
 
+Open AWS Console:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220826668-4b0c1ee9-ff75-4913-b940-826317b5a816.png" alt="Sublime's custom image"/>
+</p>
+
+Open EC2 Service:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220826778-3ea28a03-eb87-4b2a-b314-69ea7c2eff24.png" alt="Sublime's custom image"/>
+</p>
+
+Lunche new EC2 Instance:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220826940-a399c930-3fd2-4564-a596-c9bc17ad225b.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220827063-5636f65c-8398-4bd2-90e0-cf493579f7a9.png" alt="Sublime's custom image"/>
+</p>
+
+Connect to Instance:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220827265-eb3e77bc-c29d-401c-9a93-cac5b3ab0c92.png" alt="Sublime's custom image"/>
+</p>
+
+Now lets start downloading docker:
+
+Update the yum package index and install packages to allow apt to use a repository over HTTPS:
+
+```
+sudo yum update
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220827554-31628a21-d5dc-404e-850c-e81d9c529efb.png" alt="Sublime's custom image"/>
+</p>
+
+Search for Docker package:
+
+```
+sudo yum search docker
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220827769-41e6e28c-9515-4a86-a4f5-79ea68e658f8.png" alt="Sublime's custom image"/>
+</p>
 
 
+Install docker:
+
+```
+sudo yum install docker
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220827901-9efc8572-7f2b-46df-8f9c-76356d90c8b1.png" alt="Sublime's custom image"/>
+</p>
+
+Check docker version information:
+
+```
+sudo yum info docker
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220828365-e53171ae-2b46-4199-9df0-7276bbc6f51b.png" alt="Sublime's custom image"/>
+</p>
+
+**When we try to run any docker command it is giving me an error (Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?)
+**
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/220828570-1eabba0e-2d31-450b-9197-0a8b19b13e7d.png)
+" alt="Sublime's custom image"/>
+</p>
+
+it is worked after running the service using below command:
+
+```
+sudo systemctl start docker
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220828892-19dc9e7e-52ea-4a8c-b16d-7f4326c7c09b.png" alt="Sublime's custom image"/>
+</p>
+
+Install git to be able to pull the docker file:
+
+```
+sudo yum install git
+```
 
 
+<p align="center">
+  <img src="<img width="960" alt="image" src="https://user-images.githubusercontent.com/82225825/220829342-68f3ada2-b299-4a14-95c1-171fa54bca91.png">
+" alt="Sublime's custom image"/>
+</p>
 
 
+Pull the image using:
 
+```
+git clone <repo url>
+```
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
