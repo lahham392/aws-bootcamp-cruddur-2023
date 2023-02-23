@@ -615,10 +615,168 @@ The rest of information are just mocked to make it as realistic
   <img src="https://user-images.githubusercontent.com/82225825/220519995-836e3a66-5379-43c1-b444-a89c2d0fc8a1.png" alt="Sublime's custom image"/>
 </p>
 
+## Adding DynamoDB Local and Postgres
 
+We are going to use Postgres and DynamoDB local in future labs We can bring them in as containers and reference them externally.
+Let’s integrate the following into our existing docker compose file:
+
+1-	Open the docker compose file.
+
+2-	Add dynamodb local code:
+
+```
+    dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220982837-06ce1175-3bf9-46d1-a095-bbbf178586cc.png" alt="Sublime's custom image"/>
+</p>
+
+3-	Add postgres code also in compose file:
+
+```
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+```
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220982976-2b689a52-84b8-40b5-8f1c-6295992cd0ce.png" alt="Sublime's custom image"/>
+</p>
+
+4-	Add postgres volume also:
+
+```
+
+volumes:
+  db:
+    driver: local
+
+```
+this mean that we need to store database locally on this machine.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983160-ad0b0f49-a260-42a7-bc09-50ffeb538b6a.png" alt="Sublime's custom image"/>
+</p>
+
+5-	Make docker compose up:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983197-e329bd7e-5347-4980-9c1c-7dd1fbf01c45.png" alt="Sublime's custom image"/>
+</p>
+
+What is Dynamodb local?
+It is a way to running emulation of Dynamodb so that you can interact with it a lot faster 
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983410-65c44b3b-84c1-436b-b582-108807bb4d4b.png" alt="Sublime's custom image"/>
+</p>
+
+### Test Local Dynamodb:
+
+Run following code:
+
+```
+aws dynamodb create-table \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --attribute-definitions \
+        AttributeName=Artist,AttributeType=S \
+        AttributeName=SongTitle,AttributeType=S \
+    --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --table-class STANDARD
+
+```
+
+The Output
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983633-791c28dc-8f40-4497-ac21-dec214d87a15.png" alt="Sublime's custom image"/>
+</p>
+
+
+### Create an item in dynamodb:
+
+```
+aws dynamodb put-item \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --item \
+        '{"Artist": {"S": "No One You Know"}, "SongTitle": {"S": "Call Me Today"}, "AlbumTitle": {"S": "Somewhat Famous"}}' \
+    --return-consumed-capacity TOTAL  
+    
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983764-4b76c791-66ed-4f4c-9d2d-5fc96a13bf25.png" alt="Sublime's custom image"/>
+</p>
+
+List your tables:
+
+```
+aws dynamodb list-tables --endpoint-url http://localhost:8000
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220983973-e497c6b3-d076-4174-b752-65046c721b0e.png" alt="Sublime's custom image"/>
+</p>
+
+### Installing POstgres
+
+To deal with Postgres we need to install a driver (client) in our deployment environment, so go to Gitpod.yaml and add following code:
+
+```
+  - name: postgres
+    init: |
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      sudo apt update
+      sudo apt install -y postgresql-client-13 libpq-dev
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220984162-0f6343ec-e969-40fd-b887-65a730e17279.png" alt="Sublime's custom image"/>
+</p>
+
+```
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg : We are adding gpg which is a kind of key in order to read from remote repository 
+
+echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list : adding the Debian package for postgress
+ 
+```
+Error Shown as:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220984354-658335c4-9b53-4bda-8022-ed13c11f989c.png" alt="Sublime's custom image"/>
+</p>
+
+Install Postgres SQl extension
+
+Add new connect:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/220984519-980372b8-84b5-4115-9c4e-ded88c5c7b03.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -626,123 +784,27 @@ The rest of information are just mocked to make it as realistic
   <img src="" alt="Sublime's custom image"/>
 </p>
 
-
+Yes Connected:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220984529-7f03baad-8cb0-4a61-be39-29ceccb016ab.png" alt="Sublime's custom image"/>
 </p>
 
+But this through a connector
+
+
+To make it through cli write:
+```
+psql –host localhost
+```
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/220984716-4beb425a-0de4-488c-8e35-23ab1c81d41a.png" alt="Sublime's custom image"/>
 </p>
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
 </p>
 
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
 
 
 # HomeWork
