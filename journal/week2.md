@@ -250,8 +250,7 @@ In below we will hardcode the span with hardcoded mock information in /home/
 Now go to /backend-flask/home_activities.py
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/221862357-3cba09dc-dbb3-4387-931f-013b7f1a7719.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/221862357-3cba09dc-dbb3-4387-931f-013b7f1a7719.png" alt="Sublime's custom image"/>
 </p>
 <br />
 <br />
