@@ -430,7 +430,7 @@ First, we will make npm installation of front-end automated: go to gitpod.yml an
 **Back to X-RAY**
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/221868962-1aebd6b4-a560-40ec-9fb6-1a9ed65590ed.png" alt="Sublime's custom image"/>
 </p>
 
 In order to make it work we have to have a Daemon which is basically another container another app that runs along our application, which you send data to it and then collect it baches and sends it over the X-Ray API to visualize your data in X-Ray UI.
@@ -439,8 +439,235 @@ In order to make it work we have to have a Daemon which is basically another con
 Add to the requirements.txt
 
 ```
+aws-xray-sdk
+```
 			   
-			   
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869159-b3a06398-73fc-4689-8f78-5ecc11a75038.png" alt="Sublime's custom image"/>
+</p>
+
+Install python dependencies
+			      
+```
+pip install -r requirements.txt
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869349-9c9edf45-5825-4aa0-8a3d-6293334d8ec4.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869364-2dab7018-bb91-454e-a177-557fb24069bd.png" alt="Sublime's custom image"/>
+</p>
+
+2- Add the following to app.py
+										
+```
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service='Cruddur', dynamic_naming=xray_url)
+XRayMiddleware(app, xray_recorder)
+																	       
+```
+																	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869594-5608a53e-d1f8-446a-83f1-d9ed6bd231e8.png" alt="Sublime's custom image"/>
+</p>
+
+3- Create x-ray json code. In aws/json/xray.json
+	       
+```
+{
+  "SamplingRule": {
+      "RuleName": "Cruddur",
+      "ResourceARN": "*",
+      "Priority": 9000,
+      "FixedRate": 0.1,
+      "ReservoirSize": 5,
+      "ServiceName": "Cruddur",
+      "ServiceType": "*",
+      "Host": "*",
+      "HTTPMethod": "*",
+      "URLPath": "*",
+      "Version": 1
+  }
+}
+	       
+```
+	       
+4- Run the below command in your terminal.
+	       
+```
+aws xray create-group \
+   --group-name "Cruddur" \
+   --filter-expression "service(\"backend-flask\")"
+	       
+```	
+	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869852-10b9798b-7a51-4531-8272-8c0671924771.png" alt="Sublime's custom image"/>
+</p>
+
+If we checked the AWS X-Ray 
+I skipped this page by pressing cancel :D
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869965-496805d9-148a-43ea-a196-7ac9706bfdd0.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221869995-b4466540-f0ad-4bdf-96bc-553db01e87d5.png" alt="Sublime's custom image"/>
+</p>
+
+5- Add sampling. 
+			      
+Sampling used determines how much information you want to see “show me a percentage of that requests” less sampling used to save money
+			      
+Run the following command:
+
+```			      
+aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json			      
+```
+			      
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221870202-d2816878-0d71-4f34-9ef6-99ca1bb06d6f.png" alt="Sublime's custom image"/>
+</p>
+															
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221870474-8a0a820c-ad63-4c9c-a8b3-bc4be1b36d91.png" alt="Sublime's custom image"/>
+</p>
+
+### X-Ray Daemon Setup			      
+
+This command implemented if we want to install it onto our environment.	
+																	       
+```																	       
+wget https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.deb
+ 
+sudo dpkg -i **.deb
+
+```																	       
+
+but in this case we will run it as a Container, because when we run ECS EC2 we may have to run X-Ray daemon in the cluster in order to get reporting, the below code will be inside our docker compose file.																
+																	       
+```																	       
+  xray-daemon:
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "us-east-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+																	       
+```																	       
+
+Now go to your Docker Compose file and add it:				     
+				     
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221871141-13dc9cf5-9f11-4713-9b9b-6af5b8ed710f.png" alt="Sublime's custom image"/>
+</p>
+
+**Let’s explain the code:**
+	       
+**image: "amazon/aws-xray-daemon" :** it is the image of this container, it is available in DockerHub and it is updated from AWS.
+
+**AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}":** it is environment variable which is available and saved in our CDE.
+
+**AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}":** it is environment variable which is available and saved in our CDE.
+	       
+**AWS_REGION: "us-east-1":** your environment region.
+	       
+**- "xray -o -b xray-daemon:2000" :** -b to bind and the reason of bind because we want to ignore user data metadata, because x-ray by default thinks it is running in VM, so -o will tell the daemon that you are not running in a VM so don’t reach out AWS metadata
+
+**ports:
+      - 2000:2000/udp:** the port that will run on.
+	       
+	       
+	       
+Now, we need to add these 2 environments variables in our backend, in docker compose file:
+	       
+```	       
+AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
+AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+	       
+```	       
+	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221871724-74040a48-3bce-423b-a7c1-8367a6a649b4.png" alt="Sublime's custom image"/>
+</p>
+
+Let’s check if it is works or not “Compose Up”
+																	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221871997-b5934e00-f875-42ad-a30e-997b5948b8f0.png" alt="Sublime's custom image"/>
+</p>
+
+But back-end not working:
+	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872046-7abe36f4-ae79-4960-ac7d-aeb5cb5be980.png" alt="Sublime's custom image"/>
+</p>
+
+And if we check the logs, we will find the following error ‘Name app not defined’
+																	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872140-7fdc1390-4dcd-4c7e-9882-ffa3cf0144a8.png" alt="Sublime's custom image"/>
+</p>
+
+We will back to app.py:
+																
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872343-f2d797f6-1152-4877-b9b7-6eaa704658f4.png" alt="Sublime's custom image"/>
+</p>
+
+And now everything is running except the xray-daemon!!! But no worries.
+			      
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872379-5f4d1e08-1f3f-4f1c-b0ef-cc64cac690d4.png" alt="Sublime's custom image"/>
+</p>
+
+By checking the xray container logs, we will got successfully sent message:
+	       
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872465-68971819-b7fe-4f52-ad20-be24216e77a2.png" alt="Sublime's custom image"/>
+</p>
+
+Go to AWS console and check the Traces:
+			      
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872502-4a5e0e0d-521a-4bdd-9b17-292b336cb5fb.png" alt="Sublime's custom image"/>
+</p>
+
+And also if we click on trace, we can see the trace map:
+																
+<p align="center">
+  <img src="!https://user-images.githubusercontent.com/82225825/221872624-908386ef-982d-4cbb-a2fc-c60b7e088aab.png" alt="Sublime's custom image"/>
+</p>
+
+
+### Now as what we did in Honeycomb, Start a custom segment:
+			      
+Got to home-activities.py
+			      
+Just to save a spent we did:			      
+			      
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872771-64fdd862-b46f-4d51-b6d9-861bfe95091d.png" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221872797-1a94cc19-2a1e-46b7-ac14-6ff3588a5c3a.png" alt="Sublime's custom image"/>
+</p>
+
+
+
+## Cloudwatch Logs
+
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
@@ -504,116 +731,75 @@ Add to the requirements.txt
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
 
 
 
 
 
 ## Rollbar
+
+			   
+			   <p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
