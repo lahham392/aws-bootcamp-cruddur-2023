@@ -411,14 +411,203 @@ Now let’s check the latency of this queries, by creating a new query, in Visua
 </p>
 
 
+## Instrument X-RAY [HARD]
+
+First, we will make npm installation of front-end automated: go to gitpod.yml and add the below code:
+```
+-name: react-js
+   Command:
+     Cd frontend-react-js
+       Npm i
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/221867224-4c1ef0d3-8cfd-4508-b3b8-e25e61e547e5.png" alt="Sublime's custom image" width="650" height=260"/>
+</p>
 
 
+**Back to X-RAY**
 
-## AWS X-RAY
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+In order to make it work we have to have a Daemon which is basically another container another app that runs along our application, which you send data to it and then collect it baches and sends it over the X-Ray API to visualize your data in X-Ray UI.
+
+1- Install AWS SDK for Python (Boto3)
+Add to the requirements.txt
+
+```
+			   
+			   
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
 
 
 
