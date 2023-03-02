@@ -668,138 +668,324 @@ Just to save a spent we did:
 
 ## Cloudwatch Logs
 
+1- Install Watchtower
+
+What is a watchtower? Watchtower is a log handler for Amazon Web Services CloudWatch Logs. CloudWatch Logs is a log management service built into AWS. It is conceptually similar to services like Splunk, Datadog, and Loggly, but is lightweight, cheaper, and tightly integrated with the rest of AWS.
+
+Open your Gitpod environment and go to requirements.txt and add the below:
+
+watchtower
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/222350090-24f31c42-9f04-4003-a222-535e771dd021.png" alt="Sublime's custom image"/>
+</p>
+
+Now go to backend-flask directory and run:
+
+```
+pip install -r requirements.txt
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350154-ee785a6e-6a97-44e6-abd7-1dfa754a4fd5.png" alt="Sublime's custom image"/>
+</p>
+
+2- In App.py
+
+Add the below import stuff:
+
+```
+import watchtower
+import logging
+from time import strftime
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350256-d2dd0786-3ade-4565-b65b-8593cea75d33.png" alt="Sublime's custom image"/>
+</p>
+
+Add the below code configuration:
+
+```
+# Configuring Logger to Use CloudWatch
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(cw_handler)
+LOGGER.info("some message")
+
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350367-a0809ac3-df8d-4146-8ab6-e6364ec1aa37.png" alt="Sublime's custom image"/>
+</p>
+
+What the code will do is:
+
+This will setup a log group with cloudwatch called Crudder, with handler.
+
+Log error after every single request.
+
+Add the below code:
+
+```
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+
+```
+
+also, in Activities Home area add the following:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350555-bc5b577a-cac9-4215-98fa-99260a4141bd.png" alt="Sublime's custom image"/>
+</p>
+
+3- To make some customer logging, Go to home-activites and add following:
+
+```
+def run(Logger):
+    logger.info("HomeActivites")
+    
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350679-dce46e19-143a-4d40-a555-05bae482d057.png" alt="Sublime's custom image"/>
+</p>
+
+4- Add the environment variables in Docker compose:
+
+```
+AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222350892-8a2d075f-f7d8-40f2-883b-f96f6274f35e.png" alt="Sublime's custom image"/>
+</p>
+
+Test by starting docker compose up:
+
+All is running.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351009-f4826ac5-9421-48a2-a51f-18da2f309c32.png" alt="Sublime's custom image"/>
+</p>
+
+It shows me the following error.
+
+<p align="center">
+  <img src="!https://user-images.githubusercontent.com/82225825/222351110-f8d62d4c-4948-4eb2-b681-db48dcbd2a71.png" alt="Sublime's custom image"/>
+</p>
+
+
+After changing it from Logger to logger
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351141-7de92c96-d4c2-41ca-a416-3553d9129059.png" alt="Sublime's custom image"/>
+</p>
+
+It shows:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351246-8e85e437-5d51-47d1-a4dc-c3cfd33c8bf5.png" alt="Sublime's custom image"/>
+</p>
+
+After change Logger to logger:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351281-e9b69a20-1578-40a2-8c36-c04a50a24ac0.png" alt="Sublime's custom image"/>
+</p>
+
+It worked!!
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351403-2249a831-ac08-4b30-9b24-2d846b3a4066.png" alt="Sublime's custom image"/>
+</p>
+
+**Check Cloudwatch:**
+
+We can see our log group:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351521-c068b1fb-13bd-4a93-9290-3af26e3b225b.png" alt="Sublime's custom image"/>
+</p>
+
+Some logs streams:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351599-4f6153e3-3769-40d2-862d-7ac674c3fb22.png" alt="Sublime's custom image"/>
+</p>
+
+And here our Homeactivites log:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351642-99e5c54b-b975-4b32-b1f2-662d506173fe.png" alt="Sublime's custom image"/>
+</p>
+
+Just to save a spent we did:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351750-2fe9ed88-8d89-49e6-9bcb-71499331d9bb.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/222351781-5cd28212-fba4-4386-9946-8e46b5796732.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/222351803-0daca7f9-829b-4587-bf4c-c2a6d0a5e437.png" alt="Sublime's custom image"/>
 </p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
 
 
 
 ## Rollbar
 
-			   
-			   <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+1- Go to requirements.txt and add the following:
+
+```
+blinker
+rollbar
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222351982-067a6295-59de-4d3e-b62d-3f89afcd74a5.png" alt="Sublime's custom image"/>
+</p>
+
+Go to backend-flask directory and run it:
+
+```
+pip install -r requirements.txt
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352066-709cd2a0-dfa3-4713-a335-a4b53dd51b59.png" alt="Sublime's custom image"/>
+</p>
+
+2- We need to set our access token.
+
+```
+export ROLLBAR_ACCESS_TOKEN="135ec44feaxxxxxxxxxx9268aa5d7a00"
+gp env ROLLBAR_ACCESS_TOKEN="135ec44feaxxxxxxxxxx9268aa5d7a00"
+
+```
+we can get the access token from Rollbar website:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352186-3e69d3e0-b776-4642-b05d-7ef977e773f0.png" alt="Sublime's custom image"/>
+</p>
+
+Check if it saved:
+
+```
+env | grep ROLL
+```
+
+3- Go to app.py and add import:
+
+```
+import rollbar
+import rollbar.contrib.flask
+from flask import got_request_exception
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352361-7e94b94e-7da1-4b85-90b3-dfa14fd98fe4.png" alt="Sublime's custom image"/>
+</p>
+
+4- Add the initialization code
+
+```
+rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+@app.before_first_request
+def init_rollbar():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        rollbar_access_token,
+        # environment name
+        'production',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
+
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352490-65b10d8e-811c-4435-9248-0501fd5b8b3c.png" alt="Sublime's custom image"/>
+</p>
+
+5- Add endpoint in app.py for testing:
+
+```
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
+
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352589-b888f156-b991-43a8-ac3a-4f37f92253cc.png" alt="Sublime's custom image"/>
+</p>
+
+Run docker compose up and check the backend if it is working:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352635-ba923161-791a-4885-b458-cb3d6ed7166a.png" alt="Sublime's custom image"/>
+</p>
+
+Run Rollbar test:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352674-19ade87c-60e2-4704-91e2-88078724cef5.png" alt="Sublime's custom image"/>
+</p>
+
+But data not logged, go and check the Backend logs:
+
+Nothing in that, open the shell and check the access token environment variables available or not:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352879-f1a099af-3543-422f-8246-df32f4a2842c.png" alt="Sublime's custom image"/>
+</p>
+
+**Not shown!!!**
+
+Commit it and restart the environment:
+
+The problem that we didn’t add the environment variable in our docker compose:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222352993-e7562bd6-0552-47f1-b93f-6a208853587c.png" alt="Sublime's custom image"/>
+</p>
+
+Now it is working:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/222353020-6fa9e13a-0677-4fc6-a693-ebd5f9e2b6a1.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/222353049-ac1e8652-6179-4c15-8dad-9d1b785e5f6c.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/222353068-c6e70ceb-4109-4e36-b448-2f2da26b6948.png" alt="Sublime's custom image"/>
 </p>
 
