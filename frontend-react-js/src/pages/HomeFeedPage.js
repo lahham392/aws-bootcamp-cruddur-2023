@@ -1,7 +1,6 @@
 import './HomeFeedPage.css';
 import React from "react";
 
-import { Auth } from 'aws-amplify';
 
 import DesktopNavigation  from '../components/DesktopNavigation';
 import DesktopSidebar     from '../components/DesktopSidebar';
@@ -10,7 +9,7 @@ import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
 // [TODO] Authenication
-import Cookies from 'js-cookie'
+import { Auth } from 'aws-amplify';
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
@@ -20,7 +19,6 @@ export default function HomeFeedPage() {
   const [user, setUser] = React.useState(null);
   const dataFetchedRef = React.useRef(false);
   
-
   const loadData = async () => {
     try {
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
