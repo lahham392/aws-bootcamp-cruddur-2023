@@ -1068,9 +1068,6 @@ Now try again:
 </p>
 
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/82225825/227128581-c92cac8d-5ad1-4b47-808b-85bca517e8de.png" alt="Sublime's custom image"/>
-</p>
 
 
 <p align="center">
