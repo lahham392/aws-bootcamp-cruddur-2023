@@ -524,269 +524,552 @@ now we can see all the connections of the database:
   <img src="https://user-images.githubusercontent.com/82225825/226809296-90e0db88-5681-43cb-a5c7-c0e9c167aa34.png" alt="Sublime's custom image"/>
 </p>
 
+
+## DB-Setup
+
+Here in same /bin, we will make a shell to setup our database automatically.
+```
+#! /usr/bin/bash
+-e # stop if it fails at any point
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="db-setup"
+printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
+
+bin_path="$(realpath .)/bin"
+
+source "$bin_path/db-drop"
+source "$bin_path/db-create"
+source "$bin_path/db-schema-load"
+source "$bin_path/db-seed"
+
+```
+
+chmod u+x bin/db-sessions &&& ./bin/db-sessions
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/226880886-ffa61a54-5b6e-463d-a7c5-d787ee421899.png" alt="Sublime's custom image"/>
+</p>
+
+## Install Postgres Client (Drivers):
+
+Move to backend-flask and go to requirements.txt and add the below:
+```
+psycopg[binary]
+psycopg[pool]
+
+```
+
+then install it:
+```
+pip install -r requirements.txt
+```
+
+
+## DB Object and Connection Pool
+
+Go to /lib and create db.py
+Add:
+
+```
+from psycopg_pool import ConnectionPool
+import os
+
+def query_wrap_object(template):
+  sql = '''
+  (SELECT COALESCE(row_to_json(object_row),'{}'::json) FROM (
+  {template}
+  ) object_row);
+  '''
+
+def query_wrap_array(template):
+  sql = '''
+  (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))),'[]'::json) FROM (
+  {template}
+  ) array_row);
+  '''
+
+connection_url = os.getenv("CONNECTION_URL")
+pool = ConnectionPool(connection_url)
+
+```
+
+Go to docker compose file and add:
+```
+CONNECTION_URL: "${CONNECTION_URL}"
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/226881343-c7f6d78a-aaee-4faf-98fc-7fb2abca24c5.png" alt="Sublime's custom image"/>
+</p>
+
+
+In our home activities we'll replace our mock endpoint with real api call:
+```
+with pool.connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql)
+          # this will return a tuple
+          # the first field being the data
+          json = cur.fetchone()
+      return json[0]
+
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/226881439-de24d825-beb5-463a-a002-03961ac2a58a.png" alt="Sublime's custom image"/>
+</p>
+
+Now open your frontend page and go to check logs in backend container.
+
+Now we got following:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227123264-d980c507-df3a-4bef-b7ec-6849fdfd3000.png" alt="Sublime's custom image"/>
+</p>
+
+After adding the queries:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227123274-595cca29-37f4-448a-96f2-5a47b0cb1a3d.png" alt="Sublime's custom image"/>
+</p>
+
+
+## Establish a connection to RDS Postgres database.
+
+Here let’s start up RDS instance and make sure that database connection URL works.
+
+We can check if our production connection URL is sace correctly, use below command:
+```
+Echo $PROD_CONNECTION_URL
+```
+
+Try to connect to RDS using:
+```
+psql $PROD_CONNECTION_URL
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227123510-cf244520-1e47-4538-a41a-0d2c917847f6.png" alt="Sublime's custom image"/>
+</p>
+
+
+As we can see it is hanging, this because the security group, we have to get Gitpod IP address and allow it from the security group of RDS instance:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227123525-a1c79874-a31e-41c7-a06c-b2e397ef8d1a.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227123681-68b1e23e-ae01-43e7-bf4f-7c6f2cbb4e2b.png" alt="Sublime's custom image"/>
 </p>
 
+And port and ip address below:
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227123719-bd7cc668-e2cc-4de2-a180-f6c6922e72bf.png" alt="Sublime's custom image"/>
 </p>
 
-
+To know Gitpod ip address:
+```
+Curl ifconfig.me
+```
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227123813-63895502-13d3-4bfe-8bff-12c7032d6de5.png" alt="Sublime's custom image"/>
 </p>
 
+To make it easier for finding:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227123843-688addb8-fbd5-44ee-b02b-4ee587e110b5.png" alt="Sublime's custom image"/>
 </p>
 
-
+Now try to connect again:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="![image](https://user-images.githubusercontent.com/82225825/227123911-f5389d5d-0a16-4229-8f75-d643c103f9e3.png)
+" alt="Sublime's custom image"/>
+</p>
+It is connected…
+
+Every time when we restart Gitpod environment, the IP address will change, and to make things easier we are going to make a script that updates security groups.
+
+Use following:
+```
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+    --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+
+```
+
+
+We need 2 things from AWS environment:
+
+Security Group ID which is sg-0addd****98851
+And 
+Security Rule Id which is 	sgr-0ee****35bb5ef5
+
+
+We will make them as an environment variable using:
+```
+export DB_SG_ID="sg-0addd0d28e1d98851"
+gp env DB_SG_ID="sg-0addd0d28e1d98851"
+export DB_SG_RULE_ID="sgr-0ee46f23435bb5ef5"
+gp env DB_SG_RULE_ID="sgr-0ee46f23435bb5ef5"
+
+```
+
+to apply it execute the following command:
+```
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+    --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+
+```
+
+To see if the changes applied or not:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/227123978-b49985e4-40a4-446c-b1a4-c5a570248c2b.png)
+" alt="Sublime's custom image"/>
 </p>
 
-
+After running the script:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="![image](https://user-images.githubusercontent.com/82225825/227123991-96b4bf2e-7a05-45b2-8d72-60d2d5e1df40.png)
+" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="![image](https://user-images.githubusercontent.com/82225825/227124014-cfc1076c-263e-4ffc-b474-5a272ee77773.png)
+" alt="Sublime's custom image"/>
 </p>
 
 
+To add description:
+```
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+    --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+
+```
+
+Now we need to take effect automatically when we run Gitpod again 
+""Go to gitpod.yml""
+
+But first go to /bin and create file called “rds-update-sg-rule” and add the following script:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124058-50d8c55d-d9be-43f3-b1af-e7d84c08259e.png" alt="Sublime's custom image"/>
 </p>
 
+run and check if it works correctly or not:
+```
+chmod u+x bin/rds-update-sg-rule
+```
+
+before:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124326-f34c0c9d-3c13-4cf8-849a-02c73566e88b.png" alt="Sublime's custom image"/>
 </p>
 
+After: "Error"
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124497-6c9ea87f-706b-43d7-a1f8-1028e39d4885.png" alt="Sublime's custom image"/>
 </p>
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
+When we checked the returned value from our script we notice that it doesn’t return the GITPOD_IP value…
+We need to export it 
+```
+export GITPOD_IP=$(curl ifconfig.me)
+```
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124618-c3bc99ea-cb19-45a1-ad25-2bf860eb53a5.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124670-81cf259b-9d06-448c-a3e5-7abbd7342761.png" alt="Sublime's custom image"/>
+</p>
+
+Now back to gitpod.yml and add:
+```
+command:
+      export GITPOD_IP=$(curl ifconfig.me)
+      source  "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
+
+```
+
+Now let’s test
+Before:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227124818-804ca888-7f46-4b44-b298-b8115792cf5a.png" alt="Sublime's custom image"/>
+</p>
+
+Close your Gitpod and re open it again:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227124925-df4cff03-6b24-4f55-89ce-d45bbbd437a0.png" alt="Sublime's custom image"/>
 </p>
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227124943-e7585916-d4f9-47fb-823e-da7a7d8975ec.png" alt="Sublime's custom image"/>
 </p>
 
-
+Try to connect to RDS:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227125039-a70768d7-76f4-4e72-9799-0b92ecc7c717.png" alt="Sublime's custom image"/>
 </p>
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
+Now we have to add the schema, our application will not work:
+Go to docker compose:
+And add the following env:
+```
+
+```
 
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
+## Cognito Post Confirmation Lambda
+
+Here we need to create a custom authorizer for Cognito, the reason we need to do this is that when we are setting up our data ‘in seed.sql’ we will notice that we need to have a user for our activities but we also have to have Cognito User ID ‘if we don’t have this then there is no way for us to verify our users’.
 
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
+### Setup Cognito post confirmation lambda
 
+Here we are going to create a handler function:
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
+1-	Create lambda in same vpc as rds instance Python 3.8
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227125385-0a2649f7-6591-41f5-bd01-6089a70857bb.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227125492-a7815ae9-741c-4ddb-bc16-24cd09fa2076.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227125516-85711236-744a-4388-bfaa-9b8d89190d78.png" alt="Sublime's custom image"/>
+</p>
+
+The Function code (put it in /aws/json/lambdas and name it cruddur-post-confirmation.py):
+```
+import json
+import psycopg2
+
+def lambda_handler(event, context):
+    user = event['request']['userAttributes']
+    print('userAttributes')
+    print(user)
+    user_display_name = user['name']
+    user_email = user['email']
+    user_handle = user['preferred_username']
+    user_cognito_id = user ['sub']
+    try:
+        conn = psycopg2.connect(os.getenv('CONNECTION_URL'))
+        cur = conn.cursor()
+
+        sql = f"""
+          "INSERT INTO users (
+            display_name,
+            email,
+            handle,
+            cognito_user_id
+            )
+          VALUES(
+            {user_display_name},
+            {user_email},
+            {user_handle}
+            {user_cognito_id}
+          )"
+        """
+        cur.execute(sql)
+        conn.commit() 
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        
+    finally:
+        if conn is not None:
+            cur.close()
+            conn.close()
+            print('Database connection closed.')
+
+    return event
+
+```
+
+Go to your schema.sql: (and add email to it ‘email text;’)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227125809-2d8ab2bd-c9c4-41d8-8a82-bade149ddecd.png" alt="Sublime's custom image"/>
+</p>
+
+Now add the function in Lambda and deploy it:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227125858-024843ed-6215-42f6-a960-9c42f8748b8a.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227125883-e5d4d4b2-7241-491d-8e9d-aee50fd7a9d5.png" alt="Sublime's custom image"/>
+</p>
+
+Now set the environment variables:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227125925-8a9585c2-4510-482f-ada5-f2774e3242dc.png" alt="Sublime's custom image"/>
+</p>
+
+Add a new one:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/227126158-c4857455-60f9-4bcf-ace0-05c5834eaf22.png)
+" alt="Sublime's custom image"/>
+</p>
+
+### Adding Lambda Layer
+
+This is a custom compiled psycopg2 C library for Python. Due to AWS Lambda missing the required PostgreSQL libraries in the AMI image, we needed to compile psycopg2 with the PostgreSQL libpq.so library statically linked libpq library instead of the default dynamic link.
+
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126255-f2827283-3e63-4ffe-a948-615089b8f165.png" alt="Sublime's custom image"/>
+</p>
+
+And add the following ARN:
+```
+arn:aws:lambda:us-east-1:898466741470:layer:psycopg2-py38:2
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126474-a7089d55-62b3-477c-b1f9-9e8580e78fa4.png" alt="Sublime's custom image"/>
+</p>
+
+
+Now we need to add a trigger ‘which is Cognito’:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126535-128a2dbd-58f7-4f08-b487-bd855830d6b0.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126666-826db638-fe3c-417b-b1d7-118de911e12e.png" alt="Sublime's custom image"/>
+</p>
+
+Now add the new trigger setting:
+We want it to happen on sign-up:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126713-37636ae1-5426-4038-af6c-f382e550e069.png" alt="Sublime's custom image"/>
+</p>
+
+We need it to happen on post confirmation:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126746-f38ab9ba-306e-4289-80e4-e5ef80e303e6.png" alt="Sublime's custom image"/>
+</p>
+
+Choose targeted Lambda function:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227126972-a1f7a04f-d908-4841-83fd-42ab7b73cf18.png" alt="Sublime's custom image"/>
+</p>
+
+Now to check if it is working well, go to Lambda function console and select Monitor: Select CloudWatch Logs
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127062-81beffda-2d8d-4df2-b91c-2b8edad645fb.png" alt="Sublime's custom image"/>
+</p>
+
+Add the required Role in your Lambda to allow the access to the RDS Instance:
+
+```
+
+```
+
+
+Default role is:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127138-39b30ff4-3362-44a5-9e27-ab7794349655.png" alt="Sublime's custom image"/>
+</p>
+
+Click in the role and edit it:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127175-4289bef6-dd0d-4c5c-8461-eef2e2791040.png" alt="Sublime's custom image"/>
+</p>
+
+Create a new policy:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127190-2ab093eb-4c5f-4c52-b049-53a62cc26b20.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127225-7dd21c03-d815-4d75-9848-21765d97bf45.png" alt="Sublime's custom image"/>
+</p>
+
+Attach the policy to the Role:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127247-fb009956-3013-4d92-8ab9-8a47b9714aa6.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227127429-e00d6573-03cd-4cc4-9202-c3f6b5618f2e.png" alt="Sublime's custom image"/>
+</p>
+
+Now add the Lambda function in the same VPC of RDS:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127476-6871f651-b98d-4b5e-9fcf-b5195667a8e5.png" alt="Sublime's custom image"/>
+</p>
+
+Click Edit:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127572-c7a742be-5686-4e58-9a5f-8785a6f3395e.png" alt="Sublime's custom image"/>
+</p>
+
+Now go to your application and Sign-Up!
+I got this error:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127593-1c615410-b5ab-4962-9bf1-6ce6c714b148.png" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227127623-f2aae278-4995-4c53-8b6c-3410cbfc93ce.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227127739-ba7a0401-a25b-445b-80b0-e6af4f833572.png" alt="Sublime's custom image"/>
 </p>
 
+((indentation mistake))
+Its works
+
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227127821-f70667d2-9b09-451a-b729-6795340405c1.png" alt="Sublime's custom image"/>
 </p>
 
-
+But still data not shown in the database, and also we got another error in CloudWatch Logs:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227127961-67b43e29-d323-4fc8-9c95-cea1d133c5aa.png" alt="Sublime's custom image"/>
+</p>
+*******This because the double quote
+
+ Make sure to apply your schema again!!! ###
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/227128082-ea771550-f1a0-406a-b530-418bf1a868cd.png" alt="Sublime's custom image"/>
 </p>
 
+Now try again:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227128106-540a47b4-19dc-440d-a17a-482835ddb36b.png" alt="Sublime's custom image"/>
 </p>
 
 
-
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/227128581-c92cac8d-5ad1-4b47-808b-85bca517e8de.png" alt="Sublime's custom image"/>
 </p>
 
 
