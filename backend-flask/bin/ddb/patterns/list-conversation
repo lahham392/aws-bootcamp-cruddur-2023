@@ -3,9 +3,10 @@
 import boto3
 import sys
 import json
+import os
 
 current_path = os.path.dirname(os.path.abspath(__file__))
-parent_path = os.path.abspath(os.path.join(current_path, '..', '..'))
+parent_path = os.path.abspath(os.path.join(current_path, '..', '..', '..'))
 sys.path.append(parent_path)
 from lib.db import db
 
@@ -23,10 +24,10 @@ table_name = 'cruddur-messages'
 def get_my_user_uuids():
   sql = """
     SELECT 
-      users.uuid,
+      users.uuid
     FROM users
     WHERE
-      users.handle =%(handle)s,
+      users.handle =%(handle)s
   """
   uuid = db.query_value(sql,{
     'handle':  'andrewbrown',
@@ -40,7 +41,7 @@ query_params = {
   'TableName': table_name,
   'KeyConditionExpression': 'pk = :pkey',
   'ExpressionAttributeValues': {
-    ':pkey': {'S': f"GRP#{brown_user_uuid}"}
+    ':pkey': {'S': f"GRP#{my_user_uuid}"}
   },
   'ReturnConsumedCapacity': 'TOTAL'
 }
