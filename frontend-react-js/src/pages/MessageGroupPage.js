@@ -6,6 +6,8 @@ import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
 import MessagesFeed from '../components/MessageFeed';
 import MessagesForm from '../components/MessageForm';
+import checkAuth from '../lib/CheckAuth';
+
 
 // [TODO] Authenication
 import Cookies from 'js-cookie'
@@ -56,16 +58,6 @@ export default function MessageGroupPage() {
     }
   };  
 
-  const checkAuth = async () => {
-    console.log('checkAuth')
-    // [TODO] Authenication
-    if (Cookies.get('user.logged_in')) {
-      setUser({
-        display_name: Cookies.get('user.name'),
-        handle: Cookies.get('user.username')
-      })
-    }
-  };
 
   React.useEffect(()=>{
     //prevents double call
@@ -74,7 +66,7 @@ export default function MessageGroupPage() {
 
     loadMessageGroupsData();
     loadMessageGroupData();
-    checkAuth();
+    checkAuth(setUser);
   }, [])
   return (
     <article>

@@ -116,7 +116,7 @@ class Db:
     print ("\npsycopg ERROR:", err, "on line number:", line_num)
     print ("psycopg traceback:", traceback, "-- type:", err_type)
 
-    # print the pgcode and pgerror exceptions
+    #print the pgcode and pgerror exceptions
     #print ("pgerror:", err.pgerror)
     #print ("pgcode:", err.pgcode, "\n")
 
