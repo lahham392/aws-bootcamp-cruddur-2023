@@ -21,7 +21,6 @@ export default function RecoverPage() {
     .catch((err) => setErrors(err.message) );
     return false
   }
-
   const onsubmit_confirm_code = async (event) => {
     event.preventDefault();
     setErrors('')
@@ -30,7 +29,7 @@ export default function RecoverPage() {
       .then((data) => setFormState('success'))
       .catch((err) => setErrors(err.message) );
     } else {
-      setErrors('Passwords do not match')
+      setCognitoErrors('Passwords do not match')
     }
     return false
   }
