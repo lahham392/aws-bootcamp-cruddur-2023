@@ -9,7 +9,6 @@ import RecoverPage from './pages/RecoverPage';
 import MessageGroupsPage from './pages/MessageGroupsPage';
 import MessageGroupPage from './pages/MessageGroupPage';
 import MessageGroupNewPage from './pages/MessageGroupNewPage';
-import MessageGroupNewPage from './pages/MessageGroupNewPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import React from 'react';
 import {
@@ -50,10 +49,6 @@ const router = createBrowserRouter([
   {
     path: "/messages",
     element: <MessageGroupsPage />
-  },
-  {
-    path: "/messages/new/:handle",
-    element: <MessageGroupNewPage />
   },
   {
     path: "/messages/new/:handle",
