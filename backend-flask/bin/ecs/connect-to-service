@@ -1,0 +1,14 @@
+#! /usr/bin/bash
+
+if [ -z "$1" ]; then
+  echo ""
+
+
+
+aws ecs execute-command  \
+--region $AWS_DEFAULT_REGION \
+--cluster cruddur \
+--task e9245e867cc44f56bcea0612b32fea3a \
+--container backend-flask \
+--command "/bin/bash" \
+--interactive
