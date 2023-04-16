@@ -1470,7 +1470,1567 @@ Now we can see some messages from our DynamoDB are shown:
   <img src="https://user-images.githubusercontent.com/82225825/232229501-96e64d1b-2562-4df3-a452-149fa6ffcf20.png" alt="Sublime's custom image"/>
 </p>
 
-page 275
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now we can see some messages from our DynamoDB are shown:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286424-8deca3d7-3a6c-4c04-b849-c8a771e6bd7a.png" alt="Sublime's custom image"/>
+</p>
+And as we see in the design, when you click to the message group you need the message group uuid in order to display that conversation.
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+Move to App.js, and change it from ‘@handle’ to ‘:message_group_uuid’
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286451-0a4c8eb5-a44d-462f-8a21-332144124769.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Also move to messagegrouppage.js and change the endpoint from ${handle} to ${params.message_group_uuid}
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286475-dc744449-8d35-42a1-8498-2de000eebf2c.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now we want make more restrictions and limitations on the ddb table (using begin stuff), go to ddb.py and add the following:
+
+**We hardcode it before in get-conversation file, here we are going to implement it automatically using ‘datetime’ function**
+
+
+```sh
+year = str(datetime.datetime.now().year)
+# define the query parameters
+query_params = {
+  'TableName': table_name,
+  'ScanIndexForward': False,
+  'Limit': 20,
+  'ReturnConsumedCapacity': 'TOTAL',
+  'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',
+  #'KeyConditionExpression': 'pk = :pk AND sk BETWEEN :start_date AND :end_date',
+  'ExpressionAttributeValues': {
+    ':year': {'S': year },
+    #":start_date": { "S": "2023-03-01T00:00:00.000000+00:00" },
+    #":end_date": { "S": "2023-03-19T23:59:59.999999+00:00" },
+    ':pk': {'S': f"MSG#{message_group_uuid}"}
+  }
+}
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now go to the front-end application, MessageGroupItem.js and change it from handle to uuid.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286517-8f1ff43c-567c-40cb-bdde-6e3d9c4cbc84.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+We are not going to match on the handle anymore, we are going to match on uuid ‘change as below code’
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286539-62b8376b-d6e7-4d6c-ab44-efefa0e22c82.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+If we run the app and enter to the message we can see in the right tail of the URL the message_group_uuid. ‘messages not shown currently will be fixed’
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286556-7ea3d702-96a9-492d-bede-bb7732ef0cf1.png" alt="Sublime's custom image"/>
+</p>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now we are going to edit our backend application, go to App.py:
+
+```sh
+@app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
+def data_messages(message_group_uuid):
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenicatied request
+    app.logger.debug("authenicated")
+    app.logger.debug(claims)
+    cognito_user_id = claims['sub']
+    model = Messages.run(
+        cognito_user_id=cognito_user_id,
+        message_group_uuid=message_group_uuid
+      )
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    # unauthenicatied request
+    app.logger.debug(e)
+    return {}, 401
+
+
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now, go to messages.py and add the new code:
+
+```sh
+from datetime import datetime, timedelta, timezone
+from lib.ddb import Ddb
+from lib.db import db
+
+class Messages:
+  def run(message_group_uuid,cognito_user_id):
+    model = {
+      'errors': None,
+      'data': None
+    }
+
+    sql = db.template('users','uuid_from_cognito_user_id')
+    my_user_uuid = db.query_value(sql,{
+      'cognito_user_id': cognito_user_id
+    })
+
+    print(f"UUID: {my_user_uuid}")
+
+    ddb = Ddb.client()
+    data = Ddb.list_messages(ddb, message_group_uuid)
+    print("list_messages")
+    print(data)
+
+    model['data'] = data
+    return model
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Add the query to get the user id to messages.py:
+
+```sh
+sql = db.template('users','uuid_from_cognito_user_id')
+    my_user_uuid = db.query_value(sql,{
+      'cognito_user_id': cognito_user_id
+    })
+
+```
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now lets check if messages are get back or not:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286644-a96a1b64-366d-4d1a-b6aa-ce502dc69fbf.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+But if we notice the ranking of the messages are opposite (upside), to fix this go to ddb.py and add:
+
+```sh
+items.reverse()
+```
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232286667-41cb75bf-2ee0-4ae1-8fc3-4e3c851d3e58.png" alt="Sublime's custom image"/>
+</p>
+
+
+### Create a message in the chat
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286724-bcea6c25-138a-4d8f-b216-d3fbaa40046f.png)
+" alt="Sublime's custom image"/>
+</p>
+As we can see that we need to pass the message_group_uuid.
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Go to MessageForm.js and add the below configuration:
+
+```sh 
+import './MessageForm.css';
+import React from "react";
+import process from 'process';
+import { json, useParams } from 'react-router-dom';
+
+export default function ActivityForm(props) {
+  const [count, setCount] = React.useState(0);
+  const [message, setMessage] = React.useState('');
+  const params = useParams();
+
+  const classes = []
+  classes.push('count')
+  if (1024-count < 0){
+    classes.push('err')
+  }
+
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/messages`
+      console.log('onsubmit payload', message)
+      let json = { 'message': message }
+      if (params.handle) {
+        json.handle = params.handle
+      } else {
+        json.message_group_uuid = params.message_group_uuid
+      }
+
+      const res = await fetch(backend_url, {
+        method: "POST",
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("access_token")}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(json)
+      });
+      let data = await res.json();
+      if (res.status === 200) {
+        console.log('data:',data)
+        if (data.message_group_uuid) {
+          console.log('redirect to message group')
+          window.location.href = `/messages/${data.message_group_uuid}`
+        } else {
+          props.setMessages(current => [...current,data]);
+        }
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const textarea_onchange = (event) => {
+    setCount(event.target.value.length);
+    setMessage(event.target.value);
+  }
+
+  return (
+    <form 
+      className='message_form'
+      onSubmit={onsubmit}
+    >
+      <textarea
+        type="text"
+        placeholder="send a direct message..."
+        value={message}
+        onChange={textarea_onchange} 
+      />
+      <div className='submit'>
+        <div className={classes.join(' ')}>{1024-count}</div>
+        <button type='submit'>Message</button>
+      </div>
+    </form>
+  );
+}
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Back again to app.py and change the message POST requests:
+
+```sh
+def data_create_message():
+  message_group_uuid   = request.json.get('message_group_uuid',None)
+  user_receiver_handle = request.json.get('handle',None)
+  message = request.json['message']
+  access_token = extract_access_token(request.headers)
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+to create or update message:
+
+```sh
+   # Create for the first time
+      model = CreateMessage.run(
+        mode="create",
+        message=message,
+        cognito_user_id=cognito_user_id,
+        user_receiver_handle=user_receiver_handle
+      )
+    else:
+      # Push onto existing Message Group
+      model = CreateMessage.run(
+        mode="update",
+        message=message,
+        message_group_uuid=message_group_uuid,
+        cognito_user_id=cognito_user_id
+      )
+
+```
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Go to Create_Message.py and add the below:
+
+```sh
+from datetime import datetime, timedelta, timezone
+
+from lib.db import db
+from lib.ddb import Ddb
+
+class CreateMessage:
+  # mode indicates if we want to create a new message_group or using an existing one
+  def run(mode, message, cognito_user_id, message_group_uuid=None, user_receiver_handle=None):
+    model = {
+      'errors': None,
+      'data': None
+    }
+
+    if (mode == "update"):
+      if message_group_uuid == None or len(message_group_uuid) < 1:
+        model['errors'] = ['message_group_uuid_blank']
+
+    if cognito_user_id == None or len(cognito_user_id) < 1:
+      model['errors'] = ['cognito_user_id_blank']
+
+    if (mode == "create"):
+      if user_receiver_handle == None or len(user_receiver_handle) < 1:
+        model['errors'] = ['user_reciever_handle_blank']
+
+    if message == None or len(message) < 1:
+      model['errors'] = ['message_blank'] 
+    elif len(message) > 1024:
+      model['errors'] = ['message_exceed_max_chars'] 
+
+    if model['errors']:
+      # return what we provided
+      model['data'] = {
+        'display_name': 'Andrew Brown',
+        'handle':  user_sender_handle,
+        'message': message
+      }
+    else:
+      sql = db.template('users','create_message_users')
+
+      if user_receiver_handle == None:
+        rev_handle = ''
+      else:
+        rev_handle = user_receiver_handle
+      users = db.query_array_json(sql,{
+        'cognito_user_id': cognito_user_id,
+        'user_receiver_handle': rev_handle
+      })
+      print("USERS =-=-=-=-==")
+      print(users)
+
+      my_user    = next((item for item in users if item["kind"] == 'sender'), None)
+      other_user = next((item for item in users if item["kind"] == 'recv')  , None)
+
+      print("USERS=[my-user]==")
+      print(my_user)
+      print("USERS=[other-user]==")
+      print(other_user)
+
+      ddb = Ddb.client()
+
+      if (mode == "update"):
+        data = Ddb.create_message(
+          client=ddb,
+          message_group_uuid=message_group_uuid,
+          message=message,
+          my_user_uuid=my_user['uuid'],
+          my_user_display_name=my_user['display_name'],
+          my_user_handle=my_user['handle']
+        )
+      elif (mode == "create"):
+        data = Ddb.create_message_group(
+          client=ddb,
+          message=message,
+          my_user_uuid=my_user['uuid'],
+          my_user_display_name=my_user['display_name'],
+          my_user_handle=my_user['handle'],
+          other_user_uuid=other_user['uuid'],
+          other_user_display_name=other_user['display_name'],
+          other_user_handle=other_user['handle']
+        )
+      model['data'] = data
+    return model
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Try to add a new message:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286838-ce4ff59d-2db9-4771-83d0-e5d0c13c81c2.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+But we are getting the below error: "This because an error in the create_message.py"
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286856-c3ff3afe-215a-46b5-a028-75698d8a5715.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Try again:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286890-d86b1adf-a453-4e47-a987-f4570b36c9bf.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+This is a need for create_message.py to create a new file called ‘create_messge_users.sql’ and add the below:
+
+```sh
+SELECT 
+  users.uuid,
+  users.display_name,
+  users.handle,
+  CASE users.cognito_user_id = %(cognito_user_id)s
+  WHEN TRUE THEN
+    'sender'
+  WHEN FALSE THEN
+    'recv'
+  ELSE
+    'other'
+  END as kind
+FROM public.users
+WHERE
+  users.cognito_user_id = %(cognito_user_id)s
+  OR 
+  users.handle = %(user_receiver_handle)s
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Let’s try it again:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286931-218e1d3f-cd65-4223-96db-6154dbb6922b.png)
+" alt="Sublime's custom image"/>
+</p>
+
+### Create Message Group New Page
+
+Go to frontend-react-js/src/pages/ and create MessageGroupNewPage.js, add the following code:
+
+```sh
+import './MessageGroupPage.css';
+import React from "react";
+import { useParams } from 'react-router-dom';
+
+import DesktopNavigation  from '../components/DesktopNavigation';
+import MessageGroupFeed from '../components/MessageGroupFeed';
+import MessagesFeed from '../components/MessageFeed';
+import MessagesForm from '../components/MessageForm';
+import checkAuth from '../lib/CheckAuth';
+
+export default function MessageGroupPage() {
+  const [otherUser, setOtherUser] = React.useState([]);
+  const [messageGroups, setMessageGroups] = React.useState([]);
+  const [messages, setMessages] = React.useState([]);
+  const [popped, setPopped] = React.useState([]);
+  const [user, setUser] = React.useState(null);
+  const dataFetchedRef = React.useRef(false);
+  const params = useParams();
+
+  const loadUserShortData = async () => {
+    try {
+      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/users/@${params.handle}/short`
+      const res = await fetch(backend_url, {
+        method: "GET"
+      });
+      let resJson = await res.json();
+      if (res.status === 200) {
+        console.log('other user:',resJson)
+        setOtherUser(resJson)
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };  
+
+  const loadMessageGroupsData = async () => {
+    try {
+      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
+      const res = await fetch(backend_url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        },
+        method: "GET"
+      });
+      let resJson = await res.json();
+      if (res.status === 200) {
+        setMessageGroups(resJson)
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };  
+
+  React.useEffect(()=>{
+    //prevents double call
+    if (dataFetchedRef.current) return;
+    dataFetchedRef.current = true;
+
+    loadMessageGroupsData();
+    loadUserShortData();
+    checkAuth(setUser);
+  }, [])
+  return (
+    <article>
+      <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />
+      <section className='message_groups'>
+        <MessageGroupFeed otherUser={otherUser} message_groups={messageGroups} />
+      </section>
+      <div className='content messages'>
+        <MessagesFeed messages={messages} />
+        <MessagesForm setMessages={setMessages} />
+      </div>
+    </article>
+  );
+}
+
+```
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Now go to seed.sql and add a new user:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232286972-929fafb2-d452-4357-aff2-d7a865e70f8a.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Create a new file in /backend-flask/services/ and name it ‘users_short.py’ and add the following:
+
+```sh
+from lib.db import db
+
+class UsersShort:
+  def run(handle):
+    sql = db.template('users','short')
+    results = db.query_object_json(sql,{
+      'handle': handle
+    })
+    return results
+
+```
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+go to /backend-flask/db/users/ and create a new file call it ‘short.sql’ and add the following:
+
+```sh
+SELECT
+  users.uuid,
+  users.handle,
+  users.display_name
+FROM public.users
+WHERE 
+  users.handle = %(handle)s
+
+```
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+go to /frontend_react_js/src/components and create a new file called ‘MessageGroupNewItem.js’ and add the following:
+
+```sh
+import './MessageGroupItem.css';
+import { Link } from "react-router-dom";
+
+export default function MessageGroupNewItem(props) {
+  return (
+    <Link className='message_group_item active' to={`/messages/new/`+props.user.handle}>
+      <div className='message_group_avatar'></div>
+      <div className='message_content'>
+        <div classsName='message_group_meta'>
+          <div className='message_group_identity'>
+            <div className='display_name'>{props.user.display_name}</div>
+            <div className="handle">@{props.user.handle}</div>
+          </div>{/* activity_identity */}
+        </div>{/* message_meta */}
+      </div>{/* message_content */}
+    </Link>
+  );
+}
+
+```
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287044-2d686292-8bf8-49d3-b363-1738a76ab159.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287056-88fce596-2cad-475e-8e61-2dcfe9f1d185.png)
+" alt="Sublime's custom image"/>
+</p>
+
+### DynamoDB Stream
+
+
+In this part we are going to Implement (Pattern E) Updating a Message Group using DynamoDB Streams, so the idea is we have an existing conversation we are going to create a new message which is associated with a group uuid, but we have to update those records using DynamoDB stream.
+
+* Go to you CDE and load the DynamoDB schema for the production using the following command: “./bin/ddb/schema-load prod”
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287129-9785a0c4-b668-486b-ac95-24e93daf2087.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287133-a4ecde4b-4878-4427-bc1a-6674c0d9c6e8.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Move to Export and Streams:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287164-ef44555c-7b27-413f-846a-d10bca3bed3a.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Turn on DynamoDB Streams:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287175-0b144866-83e7-4bab-8ed7-a89a02f69bd5.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287243-01a26e26-da7c-496b-9e6e-517f75946f72.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+* Move to VPC to create a new VPC Endpoint
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287292-7adc79ba-76a0-4c20-8f2e-fde865e3ec49.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Click ‘Create Endpoint’
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287320-ae1a1846-2263-483b-a0f0-30a4637865e0.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* In the service category where do we want to connect to.
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287355-7d16f5d0-5217-40ea-83c0-55c01d9ff57f.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Choose the service you want to connect to: ‘DynamoDB’
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287398-92db1d7a-a748-49db-be21-36756ade31bf.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Choose your VPC:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287443-75aa571b-e6a9-4d28-83ef-ec366ef59f6f.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Choose the route table:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287465-5e38ed61-933f-4360-b5a0-64743c76045f.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Create:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287483-93995ef9-4a9d-4f89-a607-0d730cd9f85b.png)
+" alt="Sublime's custom image"/>
+</p>
+
+#### Create the Lambda Function
+
+* Go to console and create the new function:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287511-30022e78-0479-4ebc-b2d5-e6901ade6c6b.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Choose the run time:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287519-79c79115-4e19-429e-ab45-c60cef720020.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+* Create a new role:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287549-f142a8ea-df29-47c1-a3cd-107024ea5a40.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+
+* Choose the VPC setting:
+* 
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287567-06e9dc56-74f4-4f9c-bdaf-370e60754fd8.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287573-c511c9f4-7567-4cff-90c4-fe22bc065f65.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+* Add the code to the function:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287588-e055ae7f-f3cf-4bb9-9ca0-f042b94f9123.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+* Add the permission to grant the lambda IAM role permission to update table items: (also add full DunamoDB access)
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287609-7618ce03-848c-4998-9418-03148f96079f.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+* Create a new inline policy:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287627-6a5b7436-5c5b-49f4-a6bd-a30d6d0f050e.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287644-0480a98f-d328-44c3-915c-d56dcb4bae1b.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287647-9b5cbfdb-4dc6-45cb-98d0-aa141207230a.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287655-c7239957-6025-4217-adec-c6f81739e2aa.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287660-0c802819-7f4b-4af2-8da7-3a72a79a81c5.png)
+" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+* Update the Schema-Load file:
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287733-6bc47b55-4a7d-40d0-a6b5-bcae7ceeb643.png)
+" alt="Sublime's custom image"/>
+</p>
+
+* Set-Up the trigger
+
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287752-6f886de8-1313-4a65-85b5-f37cda2eb8e7.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+
+* In Docker Compose file comment the following environment variable:
+<p align="center">
+  <img src="![image](https://user-images.githubusercontent.com/82225825/232287761-84e00c0e-ef2c-4b24-b524-52d899952d1f.png)
+" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+<p align="center">
+  <img src="" alt="Sublime's custom image"/>
+</p>
+
+
+
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
 </p>
@@ -1490,62 +3050,6 @@ page 275
   <img src="" alt="Sublime's custom image"/>
 </p>
 
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
 
 <p align="center">
   <img src="" alt="Sublime's custom image"/>
