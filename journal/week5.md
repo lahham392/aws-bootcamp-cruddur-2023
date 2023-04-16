@@ -1827,8 +1827,7 @@ items.reverse()
 ### Create a message in the chat
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286724-bcea6c25-138a-4d8f-b216-d3fbaa40046f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286724-bcea6c25-138a-4d8f-b216-d3fbaa40046f.png" alt="Sublime's custom image"/>
 </p>
 As we can see that we need to pass the message_group_uuid.
 
@@ -2133,8 +2132,7 @@ class CreateMessage:
 
 Try to add a new message:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286838-ce4ff59d-2db9-4771-83d0-e5d0c13c81c2.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286838-ce4ff59d-2db9-4771-83d0-e5d0c13c81c2.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -2160,8 +2158,7 @@ Try to add a new message:
 But we are getting the below error: "This because an error in the create_message.py"
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286856-c3ff3afe-215a-46b5-a028-75698d8a5715.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286856-c3ff3afe-215a-46b5-a028-75698d8a5715.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -2187,8 +2184,7 @@ But we are getting the below error: "This because an error in the create_message
 Try again:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286890-d86b1adf-a453-4e47-a987-f4570b36c9bf.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286890-d86b1adf-a453-4e47-a987-f4570b36c9bf.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -2255,8 +2251,7 @@ WHERE
 
 Let’s try it again:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286931-218e1d3f-cd65-4223-96db-6154dbb6922b.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286931-218e1d3f-cd65-4223-96db-6154dbb6922b.png" alt="Sublime's custom image"/>
 </p>
 
 ### Create Message Group New Page
@@ -2369,8 +2364,7 @@ export default function MessageGroupPage() {
 Now go to seed.sql and add a new user:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232286972-929fafb2-d452-4357-aff2-d7a865e70f8a.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232286972-929fafb2-d452-4357-aff2-d7a865e70f8a.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2482,14 +2476,12 @@ export default function MessageGroupNewItem(props) {
 ```
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287044-2d686292-8bf8-49d3-b363-1738a76ab159.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287044-2d686292-8bf8-49d3-b363-1738a76ab159.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287056-88fce596-2cad-475e-8e61-2dcfe9f1d185.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287056-88fce596-2cad-475e-8e61-2dcfe9f1d185.png" alt="Sublime's custom image"/>
 </p>
 
 ### DynamoDB Stream
@@ -2501,14 +2493,12 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287129-9785a0c4-b668-486b-ac95-24e93daf2087.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287129-9785a0c4-b668-486b-ac95-24e93daf2087.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287133-a4ecde4b-4878-4427-bc1a-6674c0d9c6e8.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287133-a4ecde4b-4878-4427-bc1a-6674c0d9c6e8.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2533,8 +2523,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Move to Export and Streams:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287164-ef44555c-7b27-413f-846a-d10bca3bed3a.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287164-ef44555c-7b27-413f-846a-d10bca3bed3a.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2559,14 +2548,12 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Turn on DynamoDB Streams:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287175-0b144866-83e7-4bab-8ed7-a89a02f69bd5.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287175-0b144866-83e7-4bab-8ed7-a89a02f69bd5.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287243-01a26e26-da7c-496b-9e6e-517f75946f72.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287243-01a26e26-da7c-496b-9e6e-517f75946f72.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2591,8 +2578,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 * Move to VPC to create a new VPC Endpoint
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287292-7adc79ba-76a0-4c20-8f2e-fde865e3ec49.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287292-7adc79ba-76a0-4c20-8f2e-fde865e3ec49.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2617,8 +2603,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Click ‘Create Endpoint’
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287320-ae1a1846-2263-483b-a0f0-30a4637865e0.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287320-ae1a1846-2263-483b-a0f0-30a4637865e0.png" alt="Sublime's custom image"/>
 </p>
 
 
@@ -2644,8 +2629,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * In the service category where do we want to connect to.
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287355-7d16f5d0-5217-40ea-83c0-55c01d9ff57f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287355-7d16f5d0-5217-40ea-83c0-55c01d9ff57f.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2671,8 +2655,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287398-92db1d7a-a748-49db-be21-36756ade31bf.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287398-92db1d7a-a748-49db-be21-36756ade31bf.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2696,8 +2679,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 * Choose your VPC:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287443-75aa571b-e6a9-4d28-83ef-ec366ef59f6f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287443-75aa571b-e6a9-4d28-83ef-ec366ef59f6f.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2722,8 +2704,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Choose the route table:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287465-5e38ed61-933f-4360-b5a0-64743c76045f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287465-5e38ed61-933f-4360-b5a0-64743c76045f.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2747,8 +2728,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 * Create:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287483-93995ef9-4a9d-4f89-a607-0d730cd9f85b.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287483-93995ef9-4a9d-4f89-a607-0d730cd9f85b.png" alt="Sublime's custom image"/>
 </p>
 
 #### Create the Lambda Function
@@ -2756,8 +2736,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Go to console and create the new function:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287511-30022e78-0479-4ebc-b2d5-e6901ade6c6b.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287511-30022e78-0479-4ebc-b2d5-e6901ade6c6b.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2781,8 +2760,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 * Choose the run time:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287519-79c79115-4e19-429e-ab45-c60cef720020.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287519-79c79115-4e19-429e-ab45-c60cef720020.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2807,8 +2785,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Create a new role:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287549-f142a8ea-df29-47c1-a3cd-107024ea5a40.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287549-f142a8ea-df29-47c1-a3cd-107024ea5a40.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2835,14 +2812,12 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Choose the VPC setting:
 * 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287567-06e9dc56-74f4-4f9c-bdaf-370e60754fd8.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287567-06e9dc56-74f4-4f9c-bdaf-370e60754fd8.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287573-c511c9f4-7567-4cff-90c4-fe22bc065f65.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287573-c511c9f4-7567-4cff-90c4-fe22bc065f65.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2867,8 +2842,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 
 * Add the code to the function:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287588-e055ae7f-f3cf-4bb9-9ca0-f042b94f9123.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287588-e055ae7f-f3cf-4bb9-9ca0-f042b94f9123.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2894,8 +2868,7 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Add the permission to grant the lambda IAM role permission to update table items: (also add full DunamoDB access)
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287609-7618ce03-848c-4998-9418-03148f96079f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287609-7618ce03-848c-4998-9418-03148f96079f.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2921,33 +2894,28 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Create a new inline policy:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287627-6a5b7436-5c5b-49f4-a6bd-a30d6d0f050e.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287627-6a5b7436-5c5b-49f4-a6bd-a30d6d0f050e.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287644-0480a98f-d328-44c3-915c-d56dcb4bae1b.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287644-0480a98f-d328-44c3-915c-d56dcb4bae1b.png" alt="Sublime's custom image"/>
 </p>
 
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287647-9b5cbfdb-4dc6-45cb-98d0-aa141207230a.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287647-9b5cbfdb-4dc6-45cb-98d0-aa141207230a.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287655-c7239957-6025-4217-adec-c6f81739e2aa.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287655-c7239957-6025-4217-adec-c6f81739e2aa.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287660-0c802819-7f4b-4af2-8da7-3a72a79a81c5.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287660-0c802819-7f4b-4af2-8da7-3a72a79a81c5.png" alt="Sublime's custom image"/>
 </p>
 
 <pre>
@@ -2973,89 +2941,161 @@ In this part we are going to Implement (Pattern E) Updating a Message Group usin
 * Update the Schema-Load file:
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287733-6bc47b55-4a7d-40d0-a6b5-bcae7ceeb643.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287733-6bc47b55-4a7d-40d0-a6b5-bcae7ceeb643.png" alt="Sublime's custom image"/>
 </p>
 
 * Set-Up the trigger
 
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287752-6f886de8-1313-4a65-85b5-f37cda2eb8e7.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287752-6f886de8-1313-4a65-85b5-f37cda2eb8e7.png" alt="Sublime's custom image"/>
 </p>
 
 
 
 * In Docker Compose file comment the following environment variable:
 <p align="center">
-  <img src="![image](https://user-images.githubusercontent.com/82225825/232287761-84e00c0e-ef2c-4b24-b524-52d899952d1f.png)
-" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232287761-84e00c0e-ef2c-4b24-b524-52d899952d1f.png" alt="Sublime's custom image"/>
+</p>
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Because of use the production DynamoDB, we will not see the previous conversation:
+
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/82225825/232289059-aa7b929d-5938-47ad-9095-7bb34bb6c487.png" alt="Sublime's custom image"/>
 </p>
 
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232289062-d883ffeb-9cc0-4eb7-89a0-c00ba272d9a4.png" alt="Sublime's custom image"/>
 </p>
 
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Try to send a message to Bayko ‘not working’:
 
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232289076-73f5f643-7274-462f-b2de-5867857813d8.png" alt="Sublime's custom image"/>
 </p>
 
+<pre>
 
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+Check the logs of backend:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232289083-d2bb2030-7565-4a1f-9217-147676c0120c.png" alt="Sublime's custom image"/>
 </p>
 
+<pre>
 
 
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+Try again after sign-out “Working!”:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232289096-b519d57e-bdca-46fc-8fbe-052c3cabddca.png" alt="Sublime's custom image"/>
 </p>
 
+<pre>
 
+
+
+
+
+
+</pre>
+
+
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+Fixing remove event in the Lambda function:
+
+```sh
+  print('event-data',event)
+
+  eventName = event['Records'][0]['eventName']
+  if (eventName == 'REMOVE'):
+    print("skip REMOVE event")
+    return
+
+```
+
+To check Dynamodb streams records:
 <p align="center">
-  <img src="" alt="Sublime's custom image"/>
+  <img src="https://user-images.githubusercontent.com/82225825/232289131-d7e2fd2e-68be-4a0c-9a50-092b9fb8270f.png" alt="Sublime's custom image"/>
 </p>
 
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
-
-
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
