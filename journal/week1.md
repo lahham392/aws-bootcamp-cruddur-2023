@@ -166,6 +166,11 @@ docker run --rm -p 4567:4567 -it backend-flask
   <img src="https://user-images.githubusercontent.com/82225825/220291086-d69a22cd-0ab5-46ff-9341-34aa561372a7.png" alt="Sublime's custom image"/>
 </p>
 
+* --rm &rarr; automatically clean up the container and remove the file system when the container exits.
+* --it &rarr; is short for --interactive + --tty. Running docker with this command it takes you straight inside the container.
+* -d &rarr; can be insted of --it run in run in background.
+
+
 Notice the green dot in Ports tap:
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220291229-e7511646-152e-4ae3-ad24-e349dc1be108.png" alt="Sublime's custom image"/>
@@ -617,6 +622,9 @@ The rest of information are just mocked to make it as realistic
 
 ## Adding DynamoDB Local and Postgres
 
+What is Dynamodb local?
+It is a way to running emulation of Dynamodb so that you can interact with it a lot faster 
+
 We are going to use Postgres and DynamoDB local in future labs We can bring them in as containers and reference them externally.
 Let’s integrate the following into our existing docker compose file:
 
@@ -684,8 +692,6 @@ this mean that we need to store database locally on this machine.
   <img src="https://user-images.githubusercontent.com/82225825/220983197-e329bd7e-5347-4980-9c1c-7dd1fbf01c45.png" alt="Sublime's custom image"/>
 </p>
 
-What is Dynamodb local?
-It is a way to running emulation of Dynamodb so that you can interact with it a lot faster 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/82225825/220983410-65c44b3b-84c1-436b-b582-108807bb4d4b.png" alt="Sublime's custom image"/>
