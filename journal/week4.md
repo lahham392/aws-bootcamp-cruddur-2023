@@ -1068,8 +1068,38 @@ Now try again:
 </p>
 
 
+## JWT JSON Web Token
+
+JWT stands for JSON Web Token. It is a compact and self-contained way of securely transmitting information between parties as a JSON object. JWTs are used as a means of authentication and authorization in web applications.
 
 
-<p align="center">
-  <img src="" alt="Sublime's custom image"/>
-</p>
+A JWT is made up of three parts:
+* Header: The header describes the type of token (in this case, JWT) and the algorithm used to sign it.
+* Payload: The payload contains the claims or information that the token is carrying, such as user ID, roles, or permissions. 
+* Signature: The signature is used to verify that the token has not been tampered with.
+
+
+### JWT DataFlow
+1- The client sends their credentials (e.g. username and password) to the server.
+2- The server validates the credentials and generates a JWT.
+3- The server sends the JWT back to the client.
+4- The client includes the JWT in the headers of subsequent requests to the server.
+5- The server verifies the JWT and uses the information in the payload to determine whether the client is authorized to access the requested resource.
+
+
+* JWTs can be used for both authentication and authorization. Authentication verifies the identity of a user, while authorization determines whether a user is allowed to perform a certain action or access a certain resource. 
+* JWTs are typically transmitted in the HTTP Authorization header using the Bearer scheme. The header looks like this:
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiSm9lIENvZGVyIn0.5dlp7GmziL2QS06sZgK4mtaqv0_xX4oFUuTDh1zHK4U
+```
+* JWTs can be signed using a variety of algorithms, including HMAC with SHA-256 or SHA-512, and RSA with SHA-256 or SHA-512. The choice of algorithm depends on the level of security required and the specific use case.
+* JWTs can also be encrypted to provide an additional layer of security. This is known as JWE (JSON Web Encryption). JWEs can be signed as well, providing both encryption and integrity.
+* JWTs are stateless, meaning that they do not require a session or any server-side storage. This makes them ideal for use in microservices and distributed systems.
+
+
+
+
+
+
+
+
