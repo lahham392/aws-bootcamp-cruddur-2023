@@ -702,6 +702,367 @@ Session-manager-plugin
   <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/6a4c4c8f-7ef1-4b3b-99c1-35fea5735525"/>
 </p>
 
+#### Script to run your service using CLI
+
+* Create a new file unde aws/json and call it “service-backend-flask.json”.
+* Add the following code:
+```sh
+{
+    "cluster": "cruddur",
+    "launchType": "FARGATE",
+    "desiredCount": 1,
+    "enableECSManagedTags": true,
+    "enableExecuteCommand": true,
+    "loadBalancers": [
+      {
+          "targetGroupArn": "arn:aws:elasticloadbalancing:ca-central-1:387543059434:targetgroup/cruddur-backend-flask-tg/87ed2a3daf2d2b1d",
+          "containerName": "backend-flask",
+          "containerPort": 4567
+      }
+    ],
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "assignPublicIp": "ENABLED",
+        "securityGroups": [
+          "sg-04bdc8d5443cc8283"
+        ],
+        "subnets": [
+          "subnet-0462b87709683ccaa",
+          "subnet-066a53dd88d557e05",
+          "subnet-021a6adafb79249e3"
+        ]
+      }
+    },
+    "serviceConnectConfiguration": {
+      "enabled": true,
+      "namespace": "cruddur",
+      "services": [
+        {
+          "portName": "backend-flask",
+          "discoveryName": "backend-flask",
+          "clientAliases": [{"port": 4567}]
+        }
+      ]
+    },
+    "propagateTags": "SERVICE",
+    "serviceName": "backend-flask",
+    "taskDefinition": "backend-flask"
+  }
+
+```
+* Deploy the service:
+
+```sh
+aws ecs create-service –cli-input-json file://aws/json/service-backend-flask.json
+```
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/2e2d48f5-8485-4d3b-923b-959cd0128b49"/>
+</p>
+
+* Connect to container by running the following command:
+```sh
+aws ecs execute-command  \
+--region $AWS_DEFAULT_REGION \
+--cluster cruddur \
+--task e9245e867cc44f56bcea0612b32fea3a \
+--container backend-flask \
+--command "/bin/bash" \
+--interactive
+```
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/a18f10ec-f5ce-4c41-9767-9bfcaab83aee"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/c3dca162-f499-4cc6-8432-d49015535597"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/9fa735c8-ac9a-47c5-aad0-dd1c86b3ba3b"/>
+</p>
+
+* In Gitpod.yaml add the following:
+
+* Check if the backend is running:
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/6c5cc8fc-f70c-4dc1-868a-e2b6ba8eed1b"/>
+</p>
+
+#### Connect Service with RDS
+
+We should make sure that the security group has access to RDS…
+* Go to default security group.
+* Add the new rule as shown “the service SG”:
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/5f498132-67d2-4c7c-8cfe-6f0cfaa7ded4"/>
+</p>
+
+* Test the connection:
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/07d36ed6-6900-4067-9c9a-b7a48fb6b55a"/>
+</p>
+
+#### Using Service Connect
+
+* Go to console and create a new service.
+* Turn on service connect.
+
+<p align="center">
+  <img src="![image](https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/4839d848-827c-474d-97c7-46f07cb51c83)
+"/>
+</p>
+
+* Choose port mapping setting.
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/6a46634b-ebbd-4578-8767-602d6564975b"/>
+</p>
+
+* Change network settings and Run…
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/40de2637-d046-43e3-ab46-8c927214e495"/>
+</p>
+
+#### Set-up load balancer
+
+1- Select the type (ALB):
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/0dd90f60-6f51-4501-b489-81d64e63c41b"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/6a6cd6cb-5d63-4754-915b-a77d900ab025"/>
+</p>
+
+2-	Select all the subnets of VPC.
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/3c17a1d8-e725-47b1-ab77-dd320c46413d"/>
+</p>
+
+3-	Create the Security Group:
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/4c69fda2-80d5-458f-a4a8-433ebdd0b883"/>
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/55c1fd91-ce7b-4930-8880-808cb39f1a27"/>
+</p>
+
+4-	Give the access to ECS:
+So, the traffic will go only through the load balancer.
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/518ccaa2-5bd1-48dd-9311-6b60cbd5cb2b"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/a70a2bdc-a22c-4b9a-a8b1-1ea49d000877"/>
+</p>
+
+5-	Create Target Group:
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/13198574-5732-4035-9e94-33b4388339a0"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/e3493d65-ef8a-4eea-9313-9c1c0a435246"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/288745a6-8f79-4e13-962b-0b7ac776e504"/>
+</p>
+** Make the same settings but for frontend on port 3000.
+
+
+6-	Add the target group to your load balancer:
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/7d8f10c0-f901-4731-9289-2394f547950e"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/859853d1-31aa-4147-8d5a-ffd392c6a367"/>
+</p>
+
+7-	Create the Load Balancer
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/35404a0b-c601-4973-aa7b-5caafff7ae5e"/>
+</p>
+
+
+Edit the service create file to add load balancer
+
+* Move to service-backend-flask.json
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/b2bbd9d2-aaa9-4887-9f70-67fbf9fa5fc7"/>
+</p>
+
+* Try to provision the service.
+```sh
+aws ecs create-service --cli-input-json file://aws/json/service-backend-flask.json
+```
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/19988975-34e9-42f0-90c5-05f48b35896a"/>
+</p>
+Need to be set to port 4567 and 3000
+
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/d204c82e-f82f-49e3-abe0-54b91d94df8e"/>
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/b754feed-e10c-45bd-99c2-581812a7ab60"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/fc0ff4a9-090d-4ff7-9948-a6e0c81969da"/>
+</p>
+
+
+#### Front-End ECS Service
+
+* Create a new file under /aws/task-defenitions/ and call it frontend-reacr-js.json 
+
+
+<p align="center">
+  <img src="![image](https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/2563b708-922d-4169-be29-bc9190cf0a9c)
+"/>
+</p>
+
+* Build the image:
+```sh
+docker build \
+--build-arg REACT_APP_BACKEND_URL="http://cruddur-alb-1422044236.us-east-1.elb.amazonaws.com:4567" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="us-east-1_yl5F8l4Ip" \
+--build-arg REACT_APP_CLIENT_ID="6mkiehfmgoeh7pm0j8k36ltfa2" \
+-t frontend-react-js \
+-f Dockerfile.prod \
+.
+
+```
+
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/54fd5ee8-54e8-48d3-8005-f63510d63a87"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/d914348b-af6b-4c32-9368-f6471f6f4dfb"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/c61f6a8d-1336-471c-9e0a-87ffcd1c655f"/>
+</p>
+
+* Make ECR repository for frontend:
+```sh
+aws ecr create-repository \
+  --repository-name frontend-react-js \
+  --image-tag-mutability MUTABLE
+
+```
+
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/c0b455b3-f80a-471e-abe3-984397f1fc45"/>
+</p>
+
+
+* Set-URL:
+```sh
+export ECR_FRONTEND_REACT_URL="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/frontend-react-js"
+
+echo $ECR_FRONTEND_REACT_URL
+
+```
+
+* Tag Image:
+```sh
+docker tag frontend-react-js:latest $ECR_FRONTEND_REACT_URL:latest
+```
+
+* Push image:
+```sh
+docker push $ECR_FRONTEND_REACT_URL:latest
+```
+
+* Create frontend service:
+```sh
+{
+    "cluster": "cruddur",
+    "launchType": "FARGATE",
+    "desiredCount": 1,
+    "enableECSManagedTags": true,
+    "enableExecuteCommand": true,
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:469104735461:targetgroup/cruddur-frontend-react-js/d3c11cb94926301a",
+            "containerName": "backend-flask",
+            "containerPort": 3000
+        }
+      ],
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "assignPublicIp": "ENABLED",
+        "securityGroups": [
+          "sg-0e810b3978451bb34"
+        ],
+        "subnets": [
+            "subnet-0a7ef1dc7b49d70bf",
+            "subnet-0e17ed4d7c8da2e7a",
+            "subnet-058a44b62ba119a93",
+            "subnet-0481b09b9452db39f",
+            "subnet-0d94b5dd576e4e523",
+            "subnet-06a563c7c3cc8401e"
+        ]
+      }
+    },
+    "propagateTags": "SERVICE",
+    "serviceName": "frontend-react-js",
+    "taskDefinition": "frontend-react-js",
+    "serviceConnectConfiguration": {
+      "enabled": true,
+      "namespace": "cruddur",
+      "services": [
+        {
+          "portName": "frontend-react-js",
+          "discoveryName": "frontend-react-js",
+          "clientAliases": [{"port": 3000}]
+        }
+      ]
+    }
+  }
+
+```
+
+* Register the task definition:
+```sh
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/frontend-react-js.json
+```
+
+* Create the service:
+```sh
+aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-js.json
+```
+
+<p align="center">
+  <img src="https://github.com/lahham392/aws-bootcamp-cruddur-2023/assets/82225825/eca997fd-14d0-4f1d-977d-4736dbcdba2e"/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
 
 <p align="center">
   <img src=""/>
@@ -725,6 +1086,29 @@ Session-manager-plugin
   <img src=""/>
 </p>
 
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
+
+<p align="center">
+  <img src=""/>
+</p>
 
 <p align="center">
   <img src=""/>
@@ -735,7 +1119,6 @@ Session-manager-plugin
   <img src=""/>
 </p>
 
-
 <p align="center">
   <img src=""/>
 </p>
@@ -757,27 +1140,6 @@ Session-manager-plugin
 <p align="center">
   <img src=""/>
 </p>
-
-
-<p align="center">
-  <img src=""/>
-</p>
-
-
-<p align="center">
-  <img src=""/>
-</p>
-
-
-<p align="center">
-  <img src=""/>
-</p>
-
-
-<p align="center">
-  <img src=""/>
-</p>
-
 
 <p align="center">
   <img src=""/>
